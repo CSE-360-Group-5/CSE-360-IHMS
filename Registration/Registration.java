@@ -14,7 +14,9 @@ public class Registration {
   /////////////////////////////////////////////////////////////////
   // Main class
   /////////////////////////////////////////////////////////////////
+    
   public static void main(String[] args) {
+      
     /////////////////////////////////////////////////////////////////
     // Labels
     /////////////////////////////////////////////////////////////////
@@ -26,8 +28,8 @@ public class Registration {
     JLabel dobLabel = new JLabel("Date of Birth: "); // DOB label
     JLabel typeLabel = new JLabel("User type:"); // type label
     JLabel registrationCodeLabel = new JLabel("Credential ID:"); // registration code label
-    JLabel requiredLabel = new JLabel("* ");
-    requiredLabel.setForeground(Color.red);
+    JLabel requiredLabel = new JLabel("* "); // required field label
+    requiredLabel.setForeground(Color.red); // set the asterisk to red
 
     /////////////////////////////////////////////////////////////////
     // Text fields
@@ -45,15 +47,15 @@ public class Registration {
 
     String[] months = new String[12]; // months array (1-12)
     for (int i = 0; i < 12; i++) // fill the array automatically
-      months[i] = Integer.toString(i+1);
+        months[i] = Integer.toString(i+1);
 
     String[] days = new String[31]; // days array (1-31)
     for (int i = 0; i < 31; i++) // fill the array automatically
-      days[i] = Integer.toString(i+1);
+        days[i] = Integer.toString(i+1);
 
     String[] years = new String[125]; // years array (1900-2025)
     for (int i = 0; i < 125; i++) // fill the array automatically
-      years[i] = Integer.toString(2025-i);
+        years[i] = Integer.toString(2025-i);
 
     JComboBox monthDropdown = new JComboBox<String>(months); // DOB month dropdown
     JComboBox dayDropdown = new JComboBox<String>(days); // DOB day dropdown
@@ -76,55 +78,60 @@ public class Registration {
 
     JPanel registrationCodePanel = new JPanel(); // Registration Code panel
 
-	typeDropdown.addActionListener(
-		new ActionListener(){
-			public void actionPerformed(ActionEvent event)
-			{
-				if (typeDropdown.getSelectedIndex() == 1)
-				{
-					registrationCodePanel.removeAll();
-					registrationCodePanel.repaint();
-				}
-				if (typeDropdown.getSelectedIndex() >= 2)
-				{
-					registrationCodePanel.add(registrationCodeLabel);
-					registrationCodePanel.add(requiredLabel);
-					registrationCodeField.setText("");
-					registrationCodePanel.add(registrationCodeField);
-					registrationCodePanel.revalidate();
-					registrationCodePanel.repaint();
-				}
-			}
-		}
-	);
+    // Type combo box listener
+  	typeDropdown.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+            if (typeDropdown.getSelectedIndex() <= 1) { // if the selected person is a patient or the --- option
+                registrationCodePanel.removeAll(); // remove the registration code panel
+                registrationCodePanel.repaint();
+            }
 
-    JPanel firstNamePanel = new JPanel(); // First name panel
+            if (typeDropdown.getSelectedIndex() >= 2) { // if the selected person is not a patient
+                registrationCodePanel.add(registrationCodeLabel); // show the registration code option
+                registrationCodePanel.add(requiredLabel);
+                registrationCodeField.setText("");
+                registrationCodePanel.add(registrationCodeField);
+                registrationCodePanel.revalidate();
+                registrationCodePanel.repaint();
+            }
+
+        }
+  	});
+      
+    // First name panel
+    JPanel firstNamePanel = new JPanel();
     firstNamePanel.add(firstNameLabel);
     firstNamePanel.add(firstNameField);
 
-    JPanel lastNamePanel = new JPanel(); // Last name panel
+    // Last name panel
+    JPanel lastNamePanel = new JPanel();
     lastNamePanel.add(lastNameLabel);
     lastNamePanel.add(lastNameField);
 
-    JPanel emailPanel = new JPanel(); // Email panel
+    // Email panel
+    JPanel emailPanel = new JPanel();
     emailPanel.add(emailLabel);
     emailPanel.add(emailField);
 
-    JPanel passwordPanel = new JPanel(); // Password panel
+    // Password panel
+    JPanel passwordPanel = new JPanel();
     passwordPanel.add(passwordLabel);
     passwordPanel.add(passwordField);
-
-    JPanel dobPanel = new JPanel(); // User DOB panel
+    
+    // User DOB panel
+    JPanel dobPanel = new JPanel();
     dobPanel.add(dobLabel);
     dobPanel.add(monthDropdown);
     dobPanel.add(dayDropdown);
     dobPanel.add(yearDropdown);
 
-    JPanel typePanel = new JPanel(); // User type panel
+    // User type panel
+    JPanel typePanel = new JPanel();
     typePanel.add(typeLabel);
     typePanel.add(typeDropdown);
 
-    JPanel submitPanel = new JPanel(); // Submit button panel
+    // Submit button panel
+    JPanel submitPanel = new JPanel();
     submitPanel.add(submitButton);
 
     // Add panels to container
@@ -140,59 +147,59 @@ public class Registration {
     content.add(submitPanel);
 
     // Submit button listener
-    submitButton.addActionListener(new ActionListener()
-    {
-        public void actionPerformed(ActionEvent event)
-        {
+    submitButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent event) {
+  			/////////////////////////////////////////////////////////////////
+  			// data variables for the user
+  			/////////////////////////////////////////////////////////////////
+  			String firstName = firstNameField.getText(); // first name of person
+  			String lastName = lastNameField.getText(); // last name of person
+  			String emailAddress = emailField.getText(); // email address of person
+  			String password = passwordField.getText(); // password of person
+  			int month = Integer.parseInt((String)monthDropdown.getSelectedItem()); // month of DOB
+  			int day = Integer.parseInt((String)dayDropdown.getSelectedItem()); // day of DOB
+  			int year = Integer.parseInt((String)yearDropdown.getSelectedItem()); // year of DOB
+  			String registrationCode = registrationCodeField.getText(); // registration code for internal personel
 
-			/////////////////////////////////////////////////////////////////
-			// data variables for the user
-			/////////////////////////////////////////////////////////////////
-			String firstName = firstNameField.getText(); // first name of person
-			String lastName = lastNameField.getText(); // last name of person
-			String emailAddress = emailField.getText(); // email address of person
-			String password = passwordField.getText(); // password of person
-			int month = Integer.parseInt((String)monthDropdown.getSelectedItem()); // month of DOB
-			int day = Integer.parseInt((String)dayDropdown.getSelectedItem()); // day of DOB
-			int year = Integer.parseInt((String)yearDropdown.getSelectedItem()); // year of DOB
-			String registrationCode = registrationCodeField.getText();
+  			String dob = "" + month + "/" + day + "/" + year; // formated DOB for the page
+  			String info; // user information
 
-			String dob = "" + month + "/" + day + "/" + year;
-			String info;
+  			/////////////////////////////////////////////////////////////////
+  			// Validation to check wrong input data
+  			/////////////////////////////////////////////////////////////////
 
-			/////////////////////////////////////////////////////////////////
-			// Validation to check wrong input data
-			/////////////////////////////////////////////////////////////////
+            // Check if the person actually selected a type
+  			if (typeDropdown.getSelectedIndex() == 0)
+  				JOptionPane.showMessageDialog(frame, "Please select the type of user");
 
-			if (typeDropdown.getSelectedIndex() == 0)
-				JOptionPane.showMessageDialog(frame, "Please select the type of user");
+  			// Check when an invalid date of birth is informed
+  			else if (year > 2015 || ((month == 4 || month == 6 || month == 9 || month == 11) && day == 31) || (month == 2 && day > 29))
+  				JOptionPane.showMessageDialog(frame, "Please select a valid Date of Birth.");
 
-			// Check when an invalid date of birth is informed
-			else if (year>2015 || ((month == 2 || month == 4 || month == 6 || month == 9 || month == 11) && day == 31))
-				JOptionPane.showMessageDialog(frame, "Please select a valid Date of Birth.");
+  			// Check when the registration code is empty for required users
+  			else if (typeDropdown.getSelectedIndex() >= 2 && registrationCode.equals(""))
+  				JOptionPane.showMessageDialog(frame, "Please fill all the required fields");
 
-			// Check when the registration code is not informed for required users
-			else if (typeDropdown.getSelectedIndex() >= 2 && registrationCode.equals(""))
-				JOptionPane.showMessageDialog(frame, "Please fill all the required fields");
+  			/////////////////////////////////////////////////////////////////
+  			// Information will not be displayed back to the user
+            // but will be put into the database instead (integration testing later)
+            // START TEST
+            /////////////////////////////////////////////////////////////////
 
-			/////////////////////////////////////////////////////////////////
-			// Information will not be displayed back to the user but will be put into the database
-       			// START TEST
-       			/////////////////////////////////////////////////////////////////
+  			// Check when the user is a patient and display his information - Test Purpose
+  			else if (typeDropdown.getSelectedIndex() == 1) {
+  				info = "First Name: " + firstName + "\nLast Name: " + lastName + "\nDate of Birth: " + dob + "\nEmail: " + emailAddress + "\nPassword: " + password + "\nType: " + typeDropdown.getSelectedItem();
+  				JOptionPane.showMessageDialog(frame, info);
+  			}
 
-			// Check when the user is a patient and display his information - Test Purpose
-			else if (typeDropdown.getSelectedIndex() == 1){
-				info = "First Name: " + firstName + "\nLast Name: " + lastName + "\nDate of Birth: " + dob + "\nEmail: " + emailAddress + "\nPassword: " + password + "\nType: " + typeDropdown.getSelectedItem();
-				JOptionPane.showMessageDialog(frame, info);
-			}
+  			// Check when the user is not a patient and display his information (including registration code) - Test Purpose
+  			else if (typeDropdown.getSelectedIndex() >= 2 && !registrationCode.equals("")) {
+  				info = "First Name: " + firstName + "\nLast Name: " + lastName + "\nDate of Birth: " + dob + "\nEmail: " + emailAddress + "\nPassword: " + password + "\nType: " + typeDropdown.getSelectedItem() + "\nCredential ID: " + registrationCode;
+  				JOptionPane.showMessageDialog(frame, info);
+  			}
 
-			// Check when the user is not a patient and display his information (including registration code) - Test Purpose
-			else if (typeDropdown.getSelectedIndex() >= 2 && !registrationCode.equals("")){
-				info = "First Name: " + firstName + "\nLast Name: " + lastName + "\nDate of Birth: " + dob + "\nEmail: " + emailAddress + "\nPassword: " + password + "\nType: " + typeDropdown.getSelectedItem() + "\nCredential ID: " + registrationCode;
-				JOptionPane.showMessageDialog(frame, info);
-			}
-       	// END TEST
-        }
+        // END TEST
+      }
     });
 
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // quit program on close
