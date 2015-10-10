@@ -19,13 +19,15 @@ public class Registration {
     // Labels
     /////////////////////////////////////////////////////////////////
 
-    JLabel firstNameLabel = new JLabel("First name: "); // first name label
-    JLabel lastNameLabel = new JLabel("Last name: "); // last name label
-    JLabel emailLabel = new JLabel("Email address: "); // email address label
-    JLabel passwordLabel = new JLabel("Password: "); // password label
-    JLabel dobLabel = new JLabel("DOB: "); // DOB label
-    JLabel typeLabel = new JLabel("Type: "); // type label
-    JLabel registrationCodeLabel = new JLabel(""); // registration code label
+    JLabel firstNameLabel = new JLabel("First name:"); // first name label
+    JLabel lastNameLabel = new JLabel("Last name:"); // last name label
+    JLabel emailLabel = new JLabel("Email address:"); // email address label
+    JLabel passwordLabel = new JLabel("Password:"); // password label
+    JLabel dobLabel = new JLabel("Date of Birth: "); // DOB label
+    JLabel typeLabel = new JLabel("User type:"); // type label
+    JLabel registrationCodeLabel = new JLabel("Credential ID:"); // registration code label
+    JLabel requiredLabel = new JLabel("* ");
+    requiredLabel.setForeground(Color.red);
 
     /////////////////////////////////////////////////////////////////
     // Text fields
@@ -44,17 +46,20 @@ public class Registration {
     String[] months = new String[12]; // months array (1-12)
     for (int i = 0; i < 12; i++) // fill the array automatically
       months[i] = Integer.toString(i+1);
+
     String[] days = new String[31]; // days array (1-31)
     for (int i = 0; i < 31; i++) // fill the array automatically
       days[i] = Integer.toString(i+1);
+
     String[] years = new String[125]; // years array (1900-2025)
     for (int i = 0; i < 125; i++) // fill the array automatically
       years[i] = Integer.toString(2025-i);
+
     JComboBox monthDropdown = new JComboBox<String>(months); // DOB month dropdown
     JComboBox dayDropdown = new JComboBox<String>(days); // DOB day dropdown
     JComboBox yearDropdown = new JComboBox<String>(years); // DOB year dropdown
 
-    String[] type = {"Patient", "Doctor", "Nurse", "Healthcare Provider", "Lab Staff", "Pharmacist"}; // types that person could be
+    String[] type = {"---", "Patient", "Doctor", "Nurse", "Healthcare Provider", "Lab Staff", "Pharmacist"}; // types that person could be
     JComboBox typeDropdown = new JComboBox<String>(type); // user type dropdown
 
     /////////////////////////////////////////////////////////////////
@@ -68,6 +73,30 @@ public class Registration {
     /////////////////////////////////////////////////////////////////
 
     JFrame frame = new JFrame("Registraton");
+
+    JPanel registrationCodePanel = new JPanel(); // Registration Code panel
+
+	typeDropdown.addActionListener(
+		new ActionListener(){
+			public void actionPerformed(ActionEvent event)
+			{
+				if (typeDropdown.getSelectedIndex() == 1)
+				{
+					registrationCodePanel.removeAll();
+					registrationCodePanel.repaint();
+				}
+				if (typeDropdown.getSelectedIndex() >= 2)
+				{
+					registrationCodePanel.add(registrationCodeLabel);
+					registrationCodePanel.add(requiredLabel);
+					registrationCodeField.setText("");
+					registrationCodePanel.add(registrationCodeField);
+					registrationCodePanel.revalidate();
+					registrationCodePanel.repaint();
+				}
+			}
+		}
+	);
 
     JPanel firstNamePanel = new JPanel(); // First name panel
     firstNamePanel.add(firstNameLabel);
@@ -100,35 +129,69 @@ public class Registration {
 
     // Add panels to container
     Container content = frame.getContentPane();
-    content.setLayout(new GridLayout(7,1));
+    content.setLayout(new GridLayout(8,1));
     content.add(firstNamePanel);
     content.add(lastNamePanel);
     content.add(emailPanel);
     content.add(passwordPanel);
     content.add(dobPanel);
     content.add(typePanel);
+    content.add(registrationCodePanel);
     content.add(submitPanel);
 
     // Submit button listener
-    submitButton.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent event) {
-          /////////////////////////////////////////////////////////////////
-          // data variables for the user
-          /////////////////////////////////////////////////////////////////
-          String firstName = firstNameField.getText(); // first name of person
-          String lastName = lastNameField.getText(); // last name of person
-          String emailAddress = emailField.getText(); // email address of person
-          String password = passwordField.getText(); // password of person
-          int month = Integer.parseInt((String)monthDropdown.getSelectedItem()); // month of DOB
-          int day = Integer.parseInt((String)dayDropdown.getSelectedItem()); // day of DOB
-          int year = Integer.parseInt((String)yearDropdown.getSelectedItem()); // year of DOB
+    submitButton.addActionListener(new ActionListener()
+    {
+        public void actionPerformed(ActionEvent event)
+        {
 
-          // Information will not be displayed back to the user but will be put into the database
-          // START TEST
-          String dob = "" + month + "/" + day + "/" + year;
-          String info = "First Name: " + firstName + "\nLast Name: " + lastName + "\nDate of Birth: " + dob + "\nEmail: " + emailAddress + "\nPassword: " + password + "\nType: " + typeDropdown.getSelectedItem();
-		      JOptionPane.showMessageDialog(frame, info);
-          // END TEST
+			/////////////////////////////////////////////////////////////////
+			// data variables for the user
+			/////////////////////////////////////////////////////////////////
+			String firstName = firstNameField.getText(); // first name of person
+			String lastName = lastNameField.getText(); // last name of person
+			String emailAddress = emailField.getText(); // email address of person
+			String password = passwordField.getText(); // password of person
+			int month = Integer.parseInt((String)monthDropdown.getSelectedItem()); // month of DOB
+			int day = Integer.parseInt((String)dayDropdown.getSelectedItem()); // day of DOB
+			int year = Integer.parseInt((String)yearDropdown.getSelectedItem()); // year of DOB
+			String registrationCode = registrationCodeField.getText();
+
+			String dob = "" + month + "/" + day + "/" + year;
+			String info;
+
+			/////////////////////////////////////////////////////////////////
+			// Validation to check wrong input data
+			/////////////////////////////////////////////////////////////////
+
+			if (typeDropdown.getSelectedIndex() == 0)
+				JOptionPane.showMessageDialog(frame, "Please select the type of user");
+
+			// Check when an invalid date of birth is informed
+			else if (year>2015 || ((month == 2 || month == 4 || month == 6 || month == 9 || month == 11) && day == 31))
+				JOptionPane.showMessageDialog(frame, "Please select a valid Date of Birth.");
+
+			// Check when the registration code is not informed for required users
+			else if (typeDropdown.getSelectedIndex() >= 2 && registrationCode.equals(""))
+				JOptionPane.showMessageDialog(frame, "Please fill all the required fields");
+
+			/////////////////////////////////////////////////////////////////
+			// Information will not be displayed back to the user but will be put into the database
+       			// START TEST
+       			/////////////////////////////////////////////////////////////////
+
+			// Check when the user is a patient and display his information - Test Purpose
+			else if (typeDropdown.getSelectedIndex() == 1){
+				info = "First Name: " + firstName + "\nLast Name: " + lastName + "\nDate of Birth: " + dob + "\nEmail: " + emailAddress + "\nPassword: " + password + "\nType: " + typeDropdown.getSelectedItem();
+				JOptionPane.showMessageDialog(frame, info);
+			}
+
+			// Check when the user is not a patient and display his information (including registration code) - Test Purpose
+			else if (typeDropdown.getSelectedIndex() >= 2 && !registrationCode.equals("")){
+				info = "First Name: " + firstName + "\nLast Name: " + lastName + "\nDate of Birth: " + dob + "\nEmail: " + emailAddress + "\nPassword: " + password + "\nType: " + typeDropdown.getSelectedItem() + "\nCredential ID: " + registrationCode;
+				JOptionPane.showMessageDialog(frame, info);
+			}
+       	// END TEST
         }
     });
 
@@ -136,4 +199,5 @@ public class Registration {
     frame.setSize(500,250); // set size of window
     frame.setVisible(true); // show the window
   }
+
 }
