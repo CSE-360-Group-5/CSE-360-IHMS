@@ -19,11 +19,11 @@ public class Registration {
     for (int i = 0; i < 12; i++) // fill the array automatically
       months[i] = Integer.toString(i+1);
     String[] days = new String[31]; // days array (1-31)
-    for (int i = 0; i < 30; i++) // fill the array automatically
+    for (int i = 0; i < 31; i++) // fill the array automatically
       days[i] = Integer.toString(i+1);
     String[] years = new String[125]; // years array (1900-2025)
     for (int i = 0; i < 125; i++) // fill the array automatically
-      years[i] = Integer.toString(i+1900);
+      years[i] = Integer.toString(2025-i);
     int registrationCode = 0; // registration code if person is an internal user of the program (everything not patient)
     /////////////////////////////////////////////////////////////////
     // GUI variables
@@ -40,11 +40,11 @@ public class Registration {
     /////////////////////////////////////////////////////////////////
     // Text fields
     /////////////////////////////////////////////////////////////////
-    JTextField firstNameField = new JTextField(); // first name text field
-    JTextField lastNameField = new JTextField(); // last name text field
-    JTextField emailField = new JTextField(); // email address field
-    JTextField passwordField = new JTextField(); // password field
-    JTextField registrationCodeField = new JTextField(); // registration code field
+    JTextField firstNameField = new JTextField(15); // first name text field
+    JTextField lastNameField = new JTextField(15); // last name text field
+    JTextField emailField = new JTextField(15); // email address field
+    JTextField passwordField = new JPasswordField(15); // password field
+    JTextField registrationCodeField = new JTextField(15); // registration code field
     /////////////////////////////////////////////////////////////////
     // Combo boxes
     /////////////////////////////////////////////////////////////////
