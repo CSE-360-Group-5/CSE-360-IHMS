@@ -15,13 +15,13 @@ public class Registration {
     String emailAddress = ""; // email address of person
     String password = ""; // password of person
     String[] type = {"Patient", "Doctor", "Nurse", "Healthcare Provider", "Lab Staff", "Pharmacist"}; // types that person could be
-    int[] months = new int[12]; // months array (1-12)
+    String[] months = new String[12]; // months array (1-12)
     for (int i = 0; i < 12; i++) // fill the array automatically
       months[i] = Integer.toString(i+1);
-    int[] days = new int[31]; // days array (1-31)
+    String[] days = new String[31]; // days array (1-31)
     for (int i = 0; i < 30; i++) // fill the array automatically
       days[i] = Integer.toString(i+1);
-    int[] years = new int[125]; // years array (1900-2025)
+    String[] years = new String[125]; // years array (1900-2025)
     for (int i = 0; i < 125; i++) // fill the array automatically
       years[i] = Integer.toString(i+1900);
     int registrationCode = 0; // registration code if person is an internal user of the program (everything not patient)
@@ -48,9 +48,9 @@ public class Registration {
     /////////////////////////////////////////////////////////////////
     // Combo boxes
     /////////////////////////////////////////////////////////////////
-    JComboBox monthDropdown = new JComboBox<int>(months); // DOB month dropdown
-    JComboBox daysDropdown = new JComboBox<int>(days); // DOB day dropdown
-    JComboBox yearsDropdown = new JComboBox<int>(years); // DOB year dropdown
+    JComboBox monthDropdown = new JComboBox<String>(months); // DOB month dropdown
+    JComboBox daysDropdown = new JComboBox<String>(days); // DOB day dropdown
+    JComboBox yearsDropdown = new JComboBox<String>(years); // DOB year dropdown
     JComboBox typeDropdown = new JComboBox<String>(type); // user type dropdown
     /////////////////////////////////////////////////////////////////
     // Buttons
