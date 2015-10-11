@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.*;
 import javax.swing.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -11,8 +11,10 @@ public class UpdateHCFrame extends JPanel{
 		super();
 		JTextField conditions = new JTextField();
 		JButton edit = new JButton("Edit");
+		JButton save = new JButton("Save");
 		this.add(conditions);
 		this.add(edit);
+		FileReader conditions = new FileReader(getPatientConditions);
 	}
 	
 	public class ButtonListener implements ActionListener{ 
@@ -20,6 +22,13 @@ public class UpdateHCFrame extends JPanel{
 			
 		}
 	}
+	
+	public class SaveButtonListern implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			
+		}
+	}
+
 	
 	public class HCListener implements DocumentListener{
 		public void changedUpdate(DocumentEvent e){
@@ -33,5 +42,10 @@ public class UpdateHCFrame extends JPanel{
 		public void removeUpdate(DocumentEvent e){
 			
 		}
+	}
+	
+	public File getPatientConditions(){
+		return new File("/Users/timothymillea/Documents/CSE360/TestPatient");
+		
 	}
 }
