@@ -224,52 +224,56 @@ public class CalendarProgram{
 
 	static String[] input(int d, int m, int y){//input frame for schedule
 		String[] out=new String[4];//appointment info storage
-		String option1 = "Dr. Whitehead";
-		String option2 = "Dr. Namie";
-		String option3 = "Dr. Liddell";
 		
-		String[] doctors = {option1, option2, option3};
-
-		JFrame input=new JFrame("Make Appointment");
+		final String[] doctors = {"Dr. Whitehead", "Dr. Namie", "Dr. Liddell"};
+		
+		final JFrame input=new JFrame("Make Appointment");
 		Container pane1;
 		JPanel pan=new JPanel(null);
 		JLabel doctor=new JLabel("Choose your Doctor:");
 		JLabel da=new JLabel("Date:");
-		JLabel day=new JLabel(Integer.toString(d));
+		/*JLabel day=new JLabel(Integer.toString(d));
 		JLabel mo=new JLabel("Month:");
 		JLabel month=new JLabel(Integer.toString(m));
 		JLabel ye=new JLabel("Year:");
-		JLabel year=new JLabel(Integer.toString(y));
+		JLabel year=new JLabel(Integer.toString(y));*/
 		JLabel time=new JLabel("Appointment Time:");
 		JButton submit=new JButton("Submit");
 		docName = new JComboBox(doctors);
+		
 		JSpinner timeSpinner = new JSpinner(new SpinnerDateModel());
-		JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "HH:mm a");
+		JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(timeSpinner, "hh:mm a");
 		timeSpinner.setEditor(timeEditor);
 		timeSpinner.setValue(new Date());
+				
+		JSpinner dateSpinner = new JSpinner(new SpinnerDateModel());
+		JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateSpinner, "MMM/dd/yyyy");
+		dateSpinner.setEditor(dateEditor);
+		dateSpinner.setValue(new Date());
 		
 		input.setSize(330, 375); //Set size to 400x400 pixels
 		pane1 = input.getContentPane();
 		pane1.setLayout(null); //Apply null layout
-		pan.setLayout(new GridLayout(5,2,20,50));
+		pan.setLayout(new GridLayout(4,2,20,50));
 		pane1.setSize((int)(input.getHeight()/2),(int)(input.getWidth()/2));
 		pane1.setLocation(input.getHeight()-((int)(input.getHeight()/2)),input.getWidth()-((int)(input.getWidth()/2)));//trying to center failed
 		input.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Close when X is clicked
 		pane1.add(pan);
-		pan.add(ye);
-		pan.add(year);
+		//pan.add(ye);
+		//pan.add(year);
 		pan.add(da);
-		pan.add(month);
-		pan.add(doctor);
-		pan.add(docName);
+		pan.add(dateSpinner);
 		pan.add(time);
 		pan.add(timeSpinner);
+		pan.add(doctor);
+		pan.add(docName);
 		pan.add(submit);
 		
 		 submit.addActionListener(new ActionListener() {
 	           public void actionPerformed(ActionEvent event) {
-	               
-	          }
+	        	   fmain.setVisible(true);	
+	        	   input.setVisible(false);
+	        	   }
 	       });
 		 
 		pan.setBounds(0, 0, 320, 335);
@@ -278,3 +282,5 @@ public class CalendarProgram{
 		return out;
 	}
 }
+
+
