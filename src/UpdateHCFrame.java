@@ -2,19 +2,20 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+
 import javax.swing.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 public class UpdateHCFrame extends JPanel{
-	public UpdateHCFrame (){
+	public UpdateHCFrame () throws FileNotFoundException{
 		super();
 		JTextField conditions = new JTextField();
 		JButton edit = new JButton("Edit");
 		JButton save = new JButton("Save");
 		this.add(conditions);
 		this.add(edit);
-		FileReader conditions = new FileReader(getPatientConditions);
+		FileReader hc = new FileReader(getPatientConditions());
 	}
 	
 	public class ButtonListener implements ActionListener{ 
