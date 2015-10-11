@@ -10,12 +10,13 @@ import javax.swing.event.DocumentListener;
 public class UpdateHCFrame extends JPanel{
 	public UpdateHCFrame () throws FileNotFoundException{
 		super();
-		JTextField conditions = new JTextField();
+		JTextArea conditions = new JTextArea("Health Care Conditions",20, 20);
 		JButton edit = new JButton("Edit");
 		JButton save = new JButton("Save");
 		this.add(conditions);
 		this.add(edit);
-		FileReader hc = new FileReader(getPatientConditions());
+		this.add(save);
+		//FileReader hc = new FileReader(getPatientConditions());
 	}
 	
 	public class ButtonListener implements ActionListener{ 
