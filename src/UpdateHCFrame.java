@@ -13,19 +13,31 @@ public class UpdateHCFrame extends JPanel{
 	JButton cancel;
 	JButton save;
 	JTextField nameField;
+<<<<<<< HEAD
 	JTextField DOBField;
+=======
+    	JTextField DOBField;
+>>>>>>> origin/hpc
 	String filename;
 	Writer writer;
 	
 	public UpdateHCFrame () throws IOException{
 		super();
 		nameField=new JTextField("Patient Name",20);
+<<<<<<< HEAD
 		DOBField=new JTextField("Date of Birth: mm/dd/yyyy",20);
+=======
+        	DOBField=new JTextField("Date of Birth: mm/dd/yyyy",20);
+>>>>>>> origin/hpc
 		conditions = new JTextArea("Health Care Conditions",20, 20);
 		JButton cancel = new JButton("Cancel");
 		JButton save = new JButton("Save");
 		this.add(nameField);
+<<<<<<< HEAD
 		this.add(DOBField);
+=======
+        	this.add(DOBField);
+>>>>>>> origin/hpc
 		this.add(conditions);
 		this.add(save);
 		this.add(cancel);
