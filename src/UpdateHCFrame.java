@@ -12,32 +12,37 @@ public class UpdateHCFrame extends JPanel{
 	JButton edit;
 	JButton save;
 	String filename;
-	Writer writer;
+	BufferedWriter writer;
+	BufferedReader reader;
 	public UpdateHCFrame () throws IOException{
 		super();
-		conditions = new JTextArea("Health Care Conditions",20, 20);
-		JButton edit = new JButton("Edit");
+		conditions = new JTextArea(20, 20);
+		//JButton edit = new JButton("Edit");
 		JButton save = new JButton("Save");
 		this.add(conditions);
-		this.add(edit);
+		//this.add(edit);
 		this.add(save);
 		SaveButtonListener saver = new SaveButtonListener();
 		save.addActionListener(saver);
 		filename = "test.txt";
-		
+		reader = new BufferedReader(new FileReader(filename));
+		while(reader.ready()){
+			conditions.append(reader.readLine()); //Reads file to text area
+			conditions.append("\n");
+		}
 		//FileReader hc = new FileReader(getPatientConditions());
 	}
 	
-	public class ButtonListener implements ActionListener{ 
-		public void actionPerformed(ActionEvent e){
+	//public class ButtonListener implements ActionListener{ 
+	//	public void actionPerformed(ActionEvent e){
 			
-		}
-	}
+	//	}
+	//}
 	
 	public class SaveButtonListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			try {
-				writer = new BufferedWriter(new FileWriter(filename));
+				writer = new BufferedWriter(new FileWriter(filename)); //Saves the edits
 			} catch (IOException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
