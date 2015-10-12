@@ -8,14 +8,23 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 public class UpdateHCFrame extends JPanel{
-	public UpdateHCFrame () throws FileNotFoundException{
+	JTextArea conditions;
+	JButton edit;
+	JButton save;
+	String filename;
+	Writer writer;
+	public UpdateHCFrame () throws IOException{
 		super();
-		JTextArea conditions = new JTextArea("Health Care Conditions",20, 20);
+		conditions = new JTextArea("Health Care Conditions",20, 20);
 		JButton edit = new JButton("Edit");
 		JButton save = new JButton("Save");
 		this.add(conditions);
 		this.add(edit);
 		this.add(save);
+		SaveButtonListener saver = new SaveButtonListener();
+		save.addActionListener(saver);
+		filename = "test.txt";
+		
 		//FileReader hc = new FileReader(getPatientConditions());
 	}
 	
@@ -25,9 +34,28 @@ public class UpdateHCFrame extends JPanel{
 		}
 	}
 	
-	public class SaveButtonListern implements ActionListener{
+	public class SaveButtonListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			
+			try {
+				writer = new BufferedWriter(new FileWriter(filename));
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			try {
+				writer.write(conditions.getText());
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			finally{
+			try {
+				writer.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			}
 		}
 	}
 
