@@ -13,31 +13,22 @@ public class UpdateHCFrame extends JPanel{
 	JButton cancel;
 	JButton save;
 	JTextField nameField;
-<<<<<<< HEAD
 	JTextField DOBField;
-=======
-    	JTextField DOBField;
->>>>>>> origin/hpc
+	String name;
+	String DOB;
 	String filename;
+	String HC;
 	Writer writer;
 	
 	public UpdateHCFrame () throws IOException{
 		super();
 		nameField=new JTextField("Patient Name",20);
-<<<<<<< HEAD
 		DOBField=new JTextField("Date of Birth: mm/dd/yyyy",20);
-=======
-        	DOBField=new JTextField("Date of Birth: mm/dd/yyyy",20);
->>>>>>> origin/hpc
 		conditions = new JTextArea("Health Care Conditions",20, 20);
 		JButton cancel = new JButton("Cancel");
 		JButton save = new JButton("Save");
 		this.add(nameField);
-<<<<<<< HEAD
 		this.add(DOBField);
-=======
-        	this.add(DOBField);
->>>>>>> origin/hpc
 		this.add(conditions);
 		this.add(save);
 		this.add(cancel);
@@ -58,7 +49,9 @@ public class UpdateHCFrame extends JPanel{
 		public void actionPerformed(ActionEvent e){
 			try {
 				writer = new BufferedWriter(new FileWriter(filename));
-				
+				name = nameField.getText();
+				HC=conditions.getText();
+				DOB=DOBField.getText();
 				//conditions.write(writer);
 				
 			} catch (IOException e2) {
@@ -66,7 +59,11 @@ public class UpdateHCFrame extends JPanel{
 				e2.printStackTrace();
 			}
 			try {
-				writer.write(conditions.getText());
+				writer.write(name+"\r\n");
+
+				writer.write(DOB+"\r\n");
+				
+				writer.write(HC);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
