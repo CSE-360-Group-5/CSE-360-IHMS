@@ -10,7 +10,7 @@ import javax.swing.event.DocumentListener;
 
 public class UpdateHCFrame extends JPanel{
 	JTextArea conditions;
-	JButton edit;
+	JButton cancel;
 	JButton save;
 	JTextField nameField;
 	JTextField DOBField;
@@ -22,13 +22,13 @@ public class UpdateHCFrame extends JPanel{
 		nameField=new JTextField("Patient Name",20);
 		DOBField=new JTextField("Date of Birth: mm/dd/yyyy",20);
 		conditions = new JTextArea("Health Care Conditions",20, 20);
-		JButton edit = new JButton("Edit");
+		JButton cancel = new JButton("Cancel");
 		JButton save = new JButton("Save");
 		this.add(nameField);
 		this.add(DOBField);
 		this.add(conditions);
-		this.add(edit);
 		this.add(save);
+		this.add(cancel);
 		SaveButtonListener saver = new SaveButtonListener();
 		save.addActionListener(saver);
 		filename = "test.txt";
