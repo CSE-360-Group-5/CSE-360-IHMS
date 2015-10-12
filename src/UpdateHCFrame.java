@@ -20,11 +20,14 @@ public class UpdateHCFrame extends JPanel{
 	String HC;
 	Writer writer;
 	
+	
 	public UpdateHCFrame () throws IOException{
 		super();
-		nameField=new JTextField("Patient Name",20);
-		DOBField=new JTextField("Date of Birth: mm/dd/yyyy",20);
-		conditions = new JTextArea("Health Care Conditions",20, 20);
+		filename="test.txt";
+		getPatientConditions();
+		nameField=new JTextField(name,20);
+		DOBField=new JTextField(DOB,20);
+		conditions = new JTextArea(HC,20, 20);
 		JButton cancel = new JButton("Cancel");
 		JButton save = new JButton("Save");
 		this.add(nameField);
@@ -60,9 +63,7 @@ public class UpdateHCFrame extends JPanel{
 			}
 			try {
 				writer.write(name+"\r\n");
-
 				writer.write(DOB+"\r\n");
-				
 				writer.write(HC);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -94,8 +95,26 @@ public class UpdateHCFrame extends JPanel{
 		}
 	}
 	
-	public File getPatientConditions(){
-		return new File("/Users/timothymillea/Documents/CSE360/TestPatient");
-		
+	public void getPatientConditions(){
+		//return new File("/Users/timothymillea/Documents/CSE360/TestPatient");
+		//Read from file
+		try
+		{
+			BufferedReader br = new BufferedReader(new FileReader(filename));
+			name = br.readLine();
+			DOB = br.readLine();
+			HC = br.readLine();
+			br.close();
+		}
+
+		catch(FileNotFoundException e)
+		{
+			System.out.println("Unable to open file" + filename + "'");
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+
 	}
 }
