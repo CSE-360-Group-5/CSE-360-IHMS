@@ -14,6 +14,7 @@ public class UpdateHCFrame extends JPanel{
 	String filename;
 	BufferedWriter writer;
 	BufferedReader reader;
+	JTextField alert;
 	public UpdateHCFrame () throws IOException{
 		super();
 		conditions = new JTextArea(20, 20);
@@ -26,6 +27,9 @@ public class UpdateHCFrame extends JPanel{
 		save.addActionListener(saver);
 		filename = "test.txt";
 		reader = new BufferedReader(new FileReader(filename));
+		alert = new JTextField();
+		this.add(alert);
+		alert.setVisible(false);
 		while(reader.ready()){
 			conditions.append(reader.readLine()); //Reads file to text area
 			conditions.append("\n");
@@ -49,6 +53,8 @@ public class UpdateHCFrame extends JPanel{
 			}
 			try {
 				writer.write(conditions.getText());
+				JOptionPane.showMessageDialog(alert,"Patient conditions updated.");
+				
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
