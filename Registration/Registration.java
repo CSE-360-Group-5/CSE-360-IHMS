@@ -24,8 +24,10 @@ public class Registration {
     JLabel emailLabel = new JLabel("Email address:"); // email address label
     JLabel passwordLabel = new JLabel("Password:"); // password label
     JLabel dobLabel = new JLabel("Date of Birth: "); // DOB label
+    JLabel sexLabel = new JLabel("Sex: ");
     JLabel typeLabel = new JLabel("Type:"); // type label
-    JLabel registrationCodeLabel = new JLabel("Credential ID:"); // registration code label
+    JLabel registrationCodeLabel = new JLabel("Registration code:"); // registration code label
+    JLabel medicalHistoryLabel = new JLabel("Medical History:");
     JLabel requiredLabel = new JLabel("* ");
     requiredLabel.setForeground(Color.red);
 
@@ -38,6 +40,37 @@ public class Registration {
     JTextField emailField = new JTextField(15); // email address field
     JTextField passwordField = new JPasswordField(15); // password field
     JTextField registrationCodeField = new JTextField(15); // registration code field
+    JTextField medicalHistoryField = new JTextField(15); // medical history field
+    JTextField sexField = new JTextField(); // gender field
+
+	/////////////////////////////////////////////////////////////////
+	// Radio buttons
+    /////////////////////////////////////////////////////////////////
+
+	JRadioButton male = new JRadioButton("Male", true); //male option for sex radio button
+	JRadioButton female = new JRadioButton("Female"); //female option for sex radio button
+	ButtonGroup sexRadioButtons = new ButtonGroup(); //creates group of radio buttons and add them to the group
+	sexRadioButtons.add(male);
+	sexRadioButtons.add(female);
+
+	class ChoiceListener implements ActionListener
+	{
+	        //  Sets the text of the field depending on which
+	        // radio button was pressed.
+	        public void actionPerformed (ActionEvent event)
+	        {
+	           Object source = event.getSource();
+
+	        	if(source == male)
+					sexField.setText("Male");
+				else if (source == female)
+					sexField.setText("Female");
+			}
+    }
+
+	ChoiceListener listener = new ChoiceListener();
+	male.addActionListener(listener);
+	female.addActionListener(listener);
 
     /////////////////////////////////////////////////////////////////
     // Combo boxes
@@ -80,28 +113,32 @@ public class Registration {
 		new ActionListener(){
 			public void actionPerformed(ActionEvent event)
 			{
+				if (typeDropdown.getSelectedIndex() == 0)
+				{
+					registrationCodePanel.removeAll();
+					registrationCodePanel.revalidate();
+					registrationCodePanel.repaint();
+				}
 				if (typeDropdown.getSelectedIndex() == 1)
 				{
 					registrationCodePanel.removeAll();
-					registrationCodeLabel.setText("Medical History: ");
-					registrationCodeField.setColumns(25);
-					registrationCodeField.setText("Previous ilnesses and current medication...");
-					registrationCodePanel.add(registrationCodeLabel);
-					registrationCodePanel.add(registrationCodeField);
+					medicalHistoryField.setText("Previous illnesses and current medication...");
+					registrationCodePanel.setSize(15,15);
+					registrationCodePanel.add(medicalHistoryLabel);
+					registrationCodePanel.add(medicalHistoryField);
 					registrationCodePanel.revalidate();
 					registrationCodePanel.repaint();
 				}
 				if (typeDropdown.getSelectedIndex() >= 2)
 				{
+					registrationCodePanel.removeAll();
 					registrationCodePanel.add(registrationCodeLabel);
 					registrationCodePanel.add(requiredLabel);
-					registrationCodeLabel.setText("Registration code: ");
-					registrationCodeField.setText("");
-					registrationCodeField.setColumns(15);
 					registrationCodePanel.add(registrationCodeField);
 					registrationCodePanel.revalidate();
 					registrationCodePanel.repaint();
 				}
+
 			}
 		}
 	);
@@ -128,6 +165,11 @@ public class Registration {
     dobPanel.add(dayDropdown);
     dobPanel.add(yearDropdown);
 
+    JPanel sexPanel = new JPanel();
+    sexPanel.add(sexLabel);
+    sexPanel.add(male);
+    sexPanel.add(female);
+
     JPanel typePanel = new JPanel(); // User type panel
     typePanel.add(typeLabel);
     typePanel.add(typeDropdown);
@@ -137,12 +179,13 @@ public class Registration {
 
     // Add panels to container
     Container content = frame.getContentPane();
-    content.setLayout(new GridLayout(8,1));
+    content.setLayout(new GridLayout(9,1));
     content.add(firstNamePanel);
     content.add(lastNamePanel);
     content.add(emailPanel);
     content.add(passwordPanel);
     content.add(dobPanel);
+    content.add(sexPanel);
     content.add(typePanel);
     content.add(registrationCodePanel);
     content.add(submitPanel);
@@ -152,7 +195,6 @@ public class Registration {
     {
         public void actionPerformed(ActionEvent event)
         {
-
 			/////////////////////////////////////////////////////////////////
 			// data variables for the user
 			/////////////////////////////////////////////////////////////////
@@ -163,10 +205,13 @@ public class Registration {
 			int month = Integer.parseInt((String)monthDropdown.getSelectedItem()); // month of DOB
 			int day = Integer.parseInt((String)dayDropdown.getSelectedItem()); // day of DOB
 			int year = Integer.parseInt((String)yearDropdown.getSelectedItem()); // year of DOB
+			String sex = sexField.getText();
 			String registrationCode = registrationCodeField.getText();
+			String medicalHistory = "\n" + medicalHistoryField.getText();
 
 			String dob = "" + month + "/" + day + "/" + year;
 			String info;
+
 
 			/////////////////////////////////////////////////////////////////
 			// Validation to check wrong input
@@ -190,13 +235,17 @@ public class Registration {
 
 			// Check when the user is a patient and display his information - Test Purpose
 			else if (typeDropdown.getSelectedIndex() == 1){
-				info = "First Name: " + firstName + "\nLast Name: " + lastName + "\nDate of Birth: " + dob + "\nEmail: " + emailAddress + "\nPassword: " + password + "\nType: " + typeDropdown.getSelectedItem() + "\nMedical History: " + registrationCode;;
+				info = "First Name: " + firstName + "\nLast Name: " + lastName + "\nDate of Birth: " + dob
+				+ "\nSex: " + sex + "\nEmail: " + emailAddress + "\nPassword: " + password
+				+ "\nType: " + typeDropdown.getSelectedItem() + "\nMedical History: " + medicalHistory;
 				JOptionPane.showMessageDialog(frame, info);
 			}
 
 			// Check when the user is not a patient and display his information (including registration code) - Test Purpose
 			else if (typeDropdown.getSelectedIndex() >= 2 && !registrationCode.equals("")){
-				info = "First Name: " + firstName + "\nLast Name: " + lastName + "\nDate of Birth: " + dob + "\nEmail: " + emailAddress + "\nPassword: " + password + "\nType: " + typeDropdown.getSelectedItem() + "\nCredential ID: " + registrationCode;
+				info = "First Name: " + firstName + "\nLast Name: " + lastName + "\nDate of Birth: " + dob
+				+ "\nSex: " + sex + "\nEmail: " + emailAddress + "\nPassword: " + password
+				+ "\nType: " + typeDropdown.getSelectedItem() + "\nCredential ID: " + registrationCode;
 				JOptionPane.showMessageDialog(frame, info);
 			}
        	// END TEST
@@ -204,7 +253,7 @@ public class Registration {
     });
 
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // quit program on close
-    frame.setSize(500,250); // set size of window
+    frame.setSize(300,480); // set size of window
     frame.setVisible(true); // show the window
   }
 
