@@ -18,67 +18,69 @@ public class Records
     {
       firstName = "???";
       lastName = "???";
-      dob = "?/?/?";
-      date = "?/?/?";
+      dob = "??/??/????";
+      date = "??/??/????           ";
       labRecord = "Empty lab record";
     }
 
    //Accessor method to access the first name of the patient
    public String getFirstName()
     {
-      return firstName;
+    	return firstName;
     }
 
    //Accessor method to access the last name of the patient
    public String getLastName()
     {
-      return lastName;
+    	return lastName;
     }
 
    //Accessor method to access the date of birth of the patient
    public String getDOB()
     {
-      return dob;
+    	return dob;
     }
 
+    //Accessor method to access the date of the lab record upload
     public String getDate()
     {
-	      return date;
+    	return date;
     }
+    
+     //Accessor method to access the lab record
     public String getRecord()
-  	{
-		  return labRecord;
+    {
+    	return labRecord;
     }
 
    //Mutator method to access the first name of the patient
    public void setFirstName(String _firstName)
    {
-   		firstName = _firstName;
+	firstName = _firstName;
    }
 
    //Mutator method to access the last name of the patient
    public void setLastName(String _lastName)
    {
-	   lastName = _lastName;
+	lastName = _lastName;
    }
 
    //Mutator method to access the date of birth of the patient
    public void setDOB(String _dob)
    {
-	   dob = _dob;
+	dob = _dob;
    }
-
 
    //Mutator method to access its date
    public void setDate(String _date)
    {
-	   date = _date;
+	date = _date;
    }
 
    //Mutator method to access the actual lab record
    public void setRecord(String _labRecord)
    {
-	   labRecord = _labRecord;
+	labRecord = _labRecord;
    }
 
    //toString() method returns a string containg First name, Last name and date of the record.
