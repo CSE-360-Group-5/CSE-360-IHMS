@@ -94,6 +94,19 @@ public class LabRecords {
 
 	JPanel datePanel = new JPanel(); // date panel
 	datePanel.add(dateLabel);
+	dateField.addKeyListener(new KeyAdapter() { // add listener to dateField
+    		public void keyPressed(KeyEvent e) {
+       			JTextField textField = (JTextField) e.getSource();
+        		String date = textField.getText();
+        		if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE){} // if backspace is pressed do nothing
+        		else if(date.length() == 2 || date.length() == 5){ //add the "/" after day and month
+        			date += "/";
+        			textField.setText(date);
+			}
+			else if(date.length() >= 10) // allow insertion up to ten characters
+	        		textField.setText(textField.getText().substring(0, 9));
+    		}
+    	});
 	datePanel.add(dateField);
 
 	JPanel northPanel = new JPanel();
@@ -110,6 +123,19 @@ public class LabRecords {
 
 	JPanel dobPanel = new JPanel(); // User DOB panel
 	dobPanel.add(dobLabel);
+	dobField.addKeyListener(new KeyAdapter() { // add listener to dobField
+    		public void keyPressed(KeyEvent e) {
+       			JTextField textField = (JTextField) e.getSource();
+        		String date = textField.getText();
+        		if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE){} // if backspace is pressed do nothing
+        		else if(date.length() == 2 || date.length() == 5){ //add the "/" after day and month
+        			date += "/";
+        			textField.setText(date);
+			}
+			else if(date.length() >= 10) // allow insertion up to ten characters
+	        		textField.setText(textField.getText().substring(0, 9));
+    		}
+    	});
     	dobPanel.add(dobField);
 
     	JPanel patientInfoPanel = new JPanel();
