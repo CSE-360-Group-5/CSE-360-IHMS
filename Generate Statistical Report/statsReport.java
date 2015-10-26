@@ -12,7 +12,7 @@ import java.awt.event.*;
 
 public class statsReport {
   public static void main(String[] args) {
-    // GUI elements
+    // GUI elements and construction
     JButton submitButton = new JButton("Generate");
 
     JFrame frame = new JFrame("Statistical Reports");
@@ -42,7 +42,7 @@ public class statsReport {
     // Functional logic
     submitButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent event) {
-          // reintialize variables to zero
+          // initialize all count variables to zero
           int numOfMales = 0;
           int numOfFemales = 0;
           int numOfSing = 0;
@@ -66,6 +66,7 @@ public class statsReport {
           int numOfNeuro = 0;
           int numOfOtherType = 0;
 
+          // gender counts
           for (int i = 0; i < sex.length; i++) {
             if (sex[i].equalsIgnoreCase("Male"))
               numOfMales++;
@@ -73,6 +74,7 @@ public class statsReport {
               numOfFemales++;
           }
 
+          // marital status counts
           for (int i = 0; i < maritalStatus.length; i++) {
             if (maritalStatus[i].equalsIgnoreCase("Single"))
               numOfSing++;
@@ -80,6 +82,7 @@ public class statsReport {
               numOfMar++;
           }
 
+          // education counts
           for (int i = 0; i < education.length; i++) {
             if (education[i].equalsIgnoreCase("No Degree"))
               numOfND++;
@@ -95,6 +98,7 @@ public class statsReport {
               numOfDoc++;
           }
 
+          // race counts
           for(int i = 0; i < race.length; i++) {
             if (race[i].equalsIgnoreCase("Asian"))
               numOfAsian++;
@@ -110,6 +114,7 @@ public class statsReport {
               numOfOtherRace++;
           }
 
+          // patient type counts
           for(int i = 0; i < patientType.length; i++) {
             if (patientType[i].equalsIgnoreCase("Vascular"))
               numOfVasc++;
@@ -124,17 +129,51 @@ public class statsReport {
             else
               numOfOtherType++;
           }
+
+          // generate the report
           String statsReport =
+          "Total number of patients in time span: " + sex.length + "\n" +
+          "-----------------------------------------\n" +
           "Gender statistics: \n" +
-          "Number of Males: " + numOfMales + " (" + (numOfMales / sex.length * 100) + "%)\n" +
-          "Number of Females: " + numOfFemales + " (" + (numOfFemales / sex.length * 100) + "%)\n" +
+          "Number of males: " + numOfMales + " (" + numOfMales / (double)sex.length * 100 + "%)\n" +
+          "Number of females: " + numOfFemales + " (" + numOfFemales / (double)sex.length * 100 + "%)\n" +
+          "-----------------------------------------\n" +
+          "Marital status statistics: \n" +
+          "Number of singles: " + numOfSing + " (" + numOfSing / (double)maritalStatus.length * 100 + "%)\n" +
+          "Number of married: " + numOfMar + " (" + numOfMar / (double)maritalStatus.length * 100 + "%)\n" +
+          "-----------------------------------------\n" +
+          "Education statistics: \n" +
+          "Number of no degrees: " + numOfND + " (" + numOfND / (double)education.length * 100 + "%)\n" +
+          "Number of high school diplomas: " + numOfHS + " (" + numOfHS / (double)education.length * 100 + "%)\n" +
+          "Number of some college experience: " + numOfSC + " (" + numOfSC / (double)education.length * 100 + "%)\n" +
+          "Number of Bachelors: " + numOfBach + " (" + numOfBach / (double)education.length * 100 + "%)\n" +
+          "Number of Masters: " + numOfMast + " (" + numOfMast / (double)education.length * 100 + "%)\n" +
+          "Number of Doctorate: " + numOfDoc + " (" + numOfDoc / (double)education.length * 100 + "%)\n" +
+          "-----------------------------------------\n" +
+          "Race statistics: \n" +
+          "Number of Caucasians: " + numOfCauc + " (" + numOfCauc / (double)race.length * 100 + "%)\n" +
+          "Number of Latinos: " + numOfLat + " (" + numOfLat / (double)race.length * 100 + "%)\n" +
+          "Number of Asians: " + numOfAsian + " (" + numOfAsian / (double)race.length * 100 + "%)\n" +
+          "Number of Black/African-Americans: " + numOfBAA + " (" + numOfBAA / (double)race.length * 100 + "%)\n" +
+          "Number of Pacific Islanders: " + numOfPacIs + " (" + numOfPacIs / (double)race.length * 100 + "%)\n" +
+          "Number of Others: " + numOfOtherRace + " (" + numOfOtherRace / (double)race.length * 100 + "%)\n" +
+          "-----------------------------------------\n" +
+          "Patient type statistics: \n" +
+          "Number of vascular patients: " + numOfVasc + " (" + numOfVasc / (double)patientType.length * 100 + "%)\n" +
+          "Number of pediatric patients: " + numOfPed + " (" + numOfPed / (double)patientType.length * 100 + "%)\n" +
+          "Number of neurologic patients: " + numOfNeuro + " (" + numOfNeuro / (double)patientType.length * 100 + "%)\n" +
+          "Number of gynocology patients: " + numOfGyno + " (" + numOfGyno / (double)patientType.length * 100 + "%)\n" +
+          "Number of orthopedic patients: " + numOfOrtho + " (" + numOfOrtho / (double)patientType.length * 100 + "%)\n" +
+          "Number of other patients: " + numOfOtherType + " (" + numOfOtherType / (double)patientType.length * 100 + "%)\n" +
           "-----------------------------------------";
+
           JOptionPane.showMessageDialog(frame, statsReport);
         }
       });
 
+      // set frame size and conditions
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // quit program on close
-      frame.setSize(300,480); // set size of window
+      frame.setSize(150,150); // set size of window
       frame.setVisible(true); // show the window
   }
 }
