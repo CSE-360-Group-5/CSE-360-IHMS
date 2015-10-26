@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////
 // Name: LabRecords.java
 // Authors: Nathan Chancellor, Zarif Akhtab, Rian Martins
-// Description: GUI inferface for the upload health records of the IPIMS
+// Description: GUI inferface for the upload lab records of the IPIMS
 // Date: 10/23/2015
 /////////////////////////////////////////////////////////////////
 
@@ -9,6 +9,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import java.util.*;
+import java.io.*;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -47,14 +49,15 @@ public class LabRecords {
 	JTextArea labRecordArea = new JTextArea(15, 20); // Text area for upload lab records
 	JScrollPane scrollLabRecord = new JScrollPane(labRecordArea); // add scroll option to the text area
 
-    	/////////////////////////////////////////////////////////////////
-    	// Buttons
-    	/////////////////////////////////////////////////////////////////
+   	/////////////////////////////////////////////////////////////////
+   	// Buttons
+   	/////////////////////////////////////////////////////////////////
 
-    	JButton saveButton = new JButton("Save"); // save button
-    	JButton clearButton = new JButton("Clear"); // clear button
+   	JButton saveButton = new JButton("Save"); // save button
+   	JButton browseButton = new JButton("Upload File"); // browse button
+   	JButton clearButton = new JButton("Clear"); // clear button
 
-    	/////////////////////////////////////////////////////////////////
+   	/////////////////////////////////////////////////////////////////
 	// Lists
 	/////////////////////////////////////////////////////////////////
 
@@ -80,6 +83,12 @@ public class LabRecords {
 			labRecordArea.setText(labRec1.getRecord());
 		}
 	});
+
+	/////////////////////////////////////////////////////////////////
+	// File chooser
+	/////////////////////////////////////////////////////////////////
+
+	final JFileChooser fc = new JFileChooser();
 
 	/////////////////////////////////////////////////////////////////
 	// Frames and panels
@@ -156,8 +165,9 @@ public class LabRecords {
 	centerSouthPanel.add(scrollLabRecord, BorderLayout.SOUTH);
 
 	JPanel buttonPanel = new JPanel(); // button panel
-	buttonPanel.add(clearButton);
 	buttonPanel.add(saveButton);
+	buttonPanel.add(browseButton);
+	buttonPanel.add(clearButton);
 
 	JPanel centerPanel = new JPanel();
 	centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
@@ -186,7 +196,7 @@ public class LabRecords {
 		public void actionPerformed(ActionEvent event)
         	{
 			/////////////////////////////////////////////////////////////////
-			// data variables for the user
+			// data variables for the lab record
 			/////////////////////////////////////////////////////////////////
 			Records labRec = new Records();
 
@@ -196,12 +206,7 @@ public class LabRecords {
 			String date = dateField.getText(); // date of the submitted lab record
 			String labRecord = labRecordArea.getText(); // lab record for the patient
 
-			/////////////////////////////////////////////////////////////////
-			// Information will not be displayed back to the user but will be put into the database
-       			// START TEST
-       			/////////////////////////////////////////////////////////////////
-
-			// Check when the user is a patient and display his information - Test Purpose
+			// fill the atributes of the Records class to save the complete object
 
 			labRec.setFirstName(firstName);
 			labRec.setLastName(lastName);
@@ -223,9 +228,8 @@ public class LabRecords {
 				successLabel.setText("  The lab record is uploaded.");
 				successLabel.setForeground(Color.green);
 			}
-			recordList.updateUI();
+			recordList.updateUI(); //update list
 
-		// END TEST
 		}
     	});
 
@@ -241,6 +245,49 @@ public class LabRecords {
 				dateField.setText("");
 				dobField.setText("");
 				labRecordArea.setText("");
+	        }
+    	});
+
+    	// browse button listener
+	browseButton.addActionListener(new ActionListener()
+	{
+	        public void actionPerformed(ActionEvent event)
+	        {
+				int returnVal = fc.showOpenDialog(frame);
+
+				if (returnVal == JFileChooser.APPROVE_OPTION)
+				{
+					File file = fc.getSelectedFile();
+
+					String line;
+					String filename = fc.getCurrentDirectory().toString() + "/" + file.getName();
+
+					try
+					{
+						FileReader fr = new FileReader (filename);
+						BufferedReader inFile = new BufferedReader (fr);
+
+						line = inFile.readLine();
+						while (line != null)
+						{
+							labRecordArea.append(line + "\n");
+							line = inFile.readLine();
+						}
+						inFile.close();
+					}
+					catch (FileNotFoundException exception)
+					{
+						labRecordArea.setText("The file " + file.getName() + " could not be found.");
+					}
+					catch (IOException exception)
+					{
+						labRecordArea.setText(exception.toString());
+					}
+				}
+				else
+				{
+					labRecordArea.setText("Open command cancelled by user.");
+				}
 	        }
     	});
 
