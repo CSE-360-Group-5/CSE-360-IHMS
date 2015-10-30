@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////
 // Name: LabRecords.java
 // Authors: Nathan Chancellor, Zarif Akhtab, Rian Martins
-// Description: GUI inferface for the upload lab records of the IPIMS
+// Description: GUI inferface for the upload/update lab records of the IPIMS
 // Date: 10/23/2015
 /////////////////////////////////////////////////////////////////
 
@@ -31,7 +31,8 @@ public class LabRecords {
 	JLabel labRecordLabel = new JLabel(" Lab Record: "); // lab record label
 	JLabel dateLabel = new JLabel("Date: "); // date label
 	JLabel successLabel = new JLabel(""); // success message label
-	JLabel recordListLabel = new JLabel("Lab Record List:"); // List label
+	JLabel recordListLabel = new JLabel("Lab Record List:"); // Lab Record list label
+	JLabel patientListLabel = new JLabel("Patients:"); // Patient list label
 
     	/////////////////////////////////////////////////////////////////
     	// Text fields
@@ -42,9 +43,9 @@ public class LabRecords {
     	JTextField dobField = new JTextField(10); // DOB field
     	JTextField dateField = new JTextField(10); // date field
 
-    	/////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////
 	// Text areas
-    	/////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////
 
 	JTextArea labRecordArea = new JTextArea(15, 20); // Text area for upload lab records
 	JScrollPane scrollLabRecord = new JScrollPane(labRecordArea); // add scroll option to the text area
@@ -56,11 +57,14 @@ public class LabRecords {
    	JButton saveButton = new JButton("Save"); // save button
    	JButton browseButton = new JButton("Upload File"); // browse button
    	JButton clearButton = new JButton("Clear"); // clear button
+   	JButton searchPatientButton = new JButton("Search Patient"); // search patient button
+   	JButton selectPatientButton = new JButton("Select"); // select patient button
 
    	/////////////////////////////////////////////////////////////////
 	// Lists
 	/////////////////////////////////////////////////////////////////
 
+	// LAB RECORDS LIST
 	Vector<Records> recordVector = new Vector<Records>(); // Vector of Records objects
 	Records emptyObject = new Records(); // create a default object
 	recordVector.add(emptyObject); // add the object to the vector
@@ -84,6 +88,19 @@ public class LabRecords {
 		}
 	});
 
+	//PATIENT LIST
+	Vector<Patient> patientVector = new Vector<Patient>(); // Vector of Records objects
+	Patient patient1 = new Patient("Patient", "Test1", "01/01/1970"); // create Patient object
+	Patient patient2 = new Patient("Patient", "Test2", "01/01/1971"); // create Patient object
+	Patient patient3 = new Patient("Patient", "Test3", "01/01/1972"); // create Patient object
+	patientVector.add(patient1); // add the object to the vector
+	patientVector.add(patient2); // add the object to the vector
+	patientVector.add(patient3); // add the object to the vector
+
+	JList<Patient> patientList = new JList<Patient>(patientVector); // creates a JList that show the content of the recordVector
+	JScrollPane scrollPatientList = new JScrollPane(patientList); // add scroll option to the list
+	patientList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Allow the selection of only one item at a time
+
 	/////////////////////////////////////////////////////////////////
 	// File chooser
 	/////////////////////////////////////////////////////////////////
@@ -94,7 +111,8 @@ public class LabRecords {
 	// Frames and panels
 	/////////////////////////////////////////////////////////////////
 
-	JFrame frame = new JFrame("Lab Records");
+	JFrame mainFrame = new JFrame("Lab Records");
+	JFrame searchPatientFrame = new JFrame("Search Patient");
 
 	JPanel instructionsPanel = new JPanel(); // Instructions panel
 	instructionsPanel.setLayout(new GridLayout(3,1));
@@ -108,6 +126,9 @@ public class LabRecords {
        			JTextField textField = (JTextField) e.getSource();
         		String date = textField.getText();
         		if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE){} // if backspace is pressed do nothing
+        		else if(Character.isLetter(e.getKeyCode()) && date.length() == 1){
+        			dateField.setText("");
+				}
         		else if(date.length() == 2 || date.length() == 5){ //add the "/" after day and month
         			date += "/";
         			textField.setText(date);
@@ -137,6 +158,13 @@ public class LabRecords {
        			JTextField textField = (JTextField) e.getSource();
         		String date = textField.getText();
         		if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE){} // if backspace is pressed do nothing
+        		else if(Character.isLetter(e.getKeyCode()) && date.length() == 1){
+        			dobField.setText("");
+				}
+        		else if(Character.isLetter(e.getKeyCode()) && date.length() > 1){
+        			date = date.substring(0,date.length()-1);
+        			textField.setText(date);
+				}
         		else if(date.length() == 2 || date.length() == 5){ //add the "/" after day and month
         			date += "/";
         			textField.setText(date);
@@ -152,7 +180,7 @@ public class LabRecords {
     	patientInfoPanel.add(firstNamePanel);
     	patientInfoPanel.add(lastNamePanel);
     	patientInfoPanel.add(dobPanel);
-
+	
     	JPanel centerNorthPanel = new JPanel();
     	centerNorthPanel.setLayout(new BoxLayout(centerNorthPanel, BoxLayout.Y_AXIS));
     	centerNorthPanel.add(patientInfoPanel);
@@ -179,16 +207,26 @@ public class LabRecords {
 
 	JPanel recordListPanel = new JPanel(); // Record List Panel
 	recordListPanel.setLayout(new BoxLayout(recordListPanel, BoxLayout.Y_AXIS));
+	recordListPanel.add(searchPatientButton);
+	recordListPanel.add(Box.createRigidArea(new Dimension(0,10)));
 	recordListPanel.add(recordListLabel);
-	recordListPanel.add(Box.createRigidArea(new Dimension(0,2)));
+	recordListPanel.add(Box.createRigidArea(new Dimension(0,3)));
 	recordListPanel.add(scrollList);
 
 	// Add panels to container
-	Container content = frame.getContentPane();
+	Container content = mainFrame.getContentPane();
 	content.setLayout(new BorderLayout());
 	content.add(instructionsPanel, BorderLayout.NORTH);
 	content.add(centerPanel, BorderLayout.WEST);
 	content.add(recordListPanel, BorderLayout.EAST);
+
+	// Add components to container
+	Container patientContainer = searchPatientFrame.getContentPane();
+	patientContainer.setLayout(new BoxLayout(patientContainer, BoxLayout.Y_AXIS));
+	patientContainer.add(patientListLabel);
+	patientContainer.add(scrollPatientList);
+	patientContainer.add(selectPatientButton);
+
 
 	// Save button listener
 	saveButton.addActionListener(new ActionListener()
@@ -230,10 +268,16 @@ public class LabRecords {
 			}
 			recordList.updateUI(); //update list
 
+			//clear the fields to add new lab record
+			firstNameField.setText("");
+			lastNameField.setText("");
+			dateField.setText("");
+			dobField.setText("");
+			labRecordArea.setText("");
 		}
-    	});
+    });
 
-    	// Clear button listener
+    // Clear button listener
 	clearButton.addActionListener(new ActionListener()
 	{
 	        public void actionPerformed(ActionEvent event)
@@ -246,14 +290,14 @@ public class LabRecords {
 				dobField.setText("");
 				labRecordArea.setText("");
 	        }
-    	});
+    });
 
-    	// browse button listener
+    // browse button listener
 	browseButton.addActionListener(new ActionListener()
 	{
 	        public void actionPerformed(ActionEvent event)
 	        {
-				int returnVal = fc.showOpenDialog(frame);
+				int returnVal = fc.showOpenDialog(mainFrame);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION)
 				{
@@ -277,7 +321,7 @@ public class LabRecords {
 					}
 					catch (FileNotFoundException exception)
 					{
-						labRecordArea.setText("The file " + file.getName() + " could not be found.");
+						labRecordArea.setText("The file " + file.getName() + " could not be found");
 					}
 					catch (IOException exception)
 					{
@@ -289,11 +333,39 @@ public class LabRecords {
 					labRecordArea.setText("Open command cancelled by user.");
 				}
 	        }
-    	});
+    });
 
-	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // quit program on close
-	frame.setSize(1100,480); // set size of window
-	frame.setVisible(true); // show the window
+    // search patient button listener
+	searchPatientButton.addActionListener(new ActionListener()
+	{
+	        public void actionPerformed(ActionEvent event)
+	        {
+				searchPatientFrame.setVisible(true); // show the window
+	        }
+    });
+
+    // select patient button listener
+	selectPatientButton.addActionListener(new ActionListener()
+	{
+		Patient patient = new Patient();
+	        public void actionPerformed(ActionEvent event)
+	        {
+				patient = patientList.getSelectedValue();
+
+				firstNameField.setText(patient.getFirstName());
+				lastNameField.setText(patient.getLastName());
+				dobField.setText(patient.getDOB());
+
+				searchPatientFrame.dispose();
+	        }
+    });
+
+	mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // quit program on close
+	mainFrame.setSize(1100,480); // set size of window
+	mainFrame.setVisible(true); // show the window
+
+	searchPatientFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // quit program on close
+	searchPatientFrame.setSize(400,400); // set size of window
 	}
 
 }
