@@ -240,6 +240,7 @@ public class LabRecords {
 				if(firstNameField.getText.equals(patientVector.elementAt(i).getFirstName()) && lastNameField.getText.equals(patientVector.elementAt(i).getLastName)){
 					searchVector.add(patientVector.elementAt(i));
 				}
+			}
 		}
 	});
 
