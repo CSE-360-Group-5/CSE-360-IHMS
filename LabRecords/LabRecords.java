@@ -220,13 +220,28 @@ public class LabRecords {
 	content.add(centerPanel, BorderLayout.WEST);
 	content.add(recordListPanel, BorderLayout.EAST);
 
+	JButton searchButton = new JButton("Search");
+	Vector<Patient> searchVector = new Vector<Patient>();
+	JScrollPane searchScroll = new JScrollPane(searchVector);
 	// Add components to container
 	Container patientContainer = searchPatientFrame.getContentPane();
 	patientContainer.setLayout(new BoxLayout(patientContainer, BoxLayout.Y_AXIS));
 	patientContainer.add(patientListLabel);
-	patientContainer.add(scrollPatientList);
+	patientContainer.add(searchScroll);
 	patientContainer.add(selectPatientButton);
-
+	patientContainer.add(firstNamePanel);
+	patientContainer.add(lastNamePanel);
+	
+	searchButton.addActionListener(new ActionListener()
+	{
+		public void actionPerfomed(ActionEvent event)
+		{
+			for(int i = 0; i < patientVector.length; i++){
+				if(firstNameField.getText.equals(patientVector.elementAt(i).getFirstName()) && lastNameField.getText.equals(patientVector.elementAt(i).getLastName)){
+					searchVector.add(patientVector.elementAt(i));
+				}
+		}
+	});
 
 	// Save button listener
 	saveButton.addActionListener(new ActionListener()
