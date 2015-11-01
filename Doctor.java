@@ -85,6 +85,7 @@ public class DoctorFrame extends JPanel{
 			}
 			
 			frame.remove(epPanel);
+			epPanel = null;
 			frame.validate();
 			frame.repaint();
 		}
