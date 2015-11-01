@@ -76,14 +76,18 @@ public class DoctorFrame extends JPanel{
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			this.remove(epPanel);
+			frame.remove(epPanel);
+			frame.validate();
+			frame.repaint();
 		}
 	}
 		
 	public class hcButtonListener implements ActionListener{
 		void ActionPerformed(ActionEvent e){
 			UpdateHCFrame hcPanel = new UpdateHCFrame();
-			this.add(hcPanel);
+			frame.add(hcPanel);
+			frame.validate();
+			frame.repaint();
 		}
 	}
 	public class labButtonListener implements ActionListener{
@@ -101,7 +105,9 @@ public class DoctorFrame extends JPanel{
 				epPanel.add(save);
 				epPanel.add(cancel);
 				save.addActionListener(saveEP);
-				this.add(epPanel);
+				frame.add(epPanel);
+				frame.validate();
+				frame.repaint();
 			}
 		}
 	}
