@@ -5,6 +5,7 @@ import java.util.*;
 public class DoctorFrame extends JPanel{
 	JFrame frame;
 	JPanel mainPanel;
+	JPanel epPanel;
 	JButton labRecordsButton;
 	JButton hcButton;
 	JButton ePrescribeButton;
@@ -75,13 +76,14 @@ public class DoctorFrame extends JPanel{
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
+			this.remove(epPanel);
 		}
 	}
 		
 	public class hcButtonListener implements ActionListener{
 		void ActionPerformed(ActionEvent e){
-			Jframe hcFrame = new JFrame("Health Care Conditions");
 			UpdateHCFrame hcPanel = new UpdateHCFrame();
+			this.add(hcPanel);
 		}
 	}
 	public class labButtonListener implements ActionListener{
@@ -92,17 +94,14 @@ public class DoctorFrame extends JPanel{
 	public class ePrescribeButtonListener implements ActionListener{
 		void ActionPerformed(ActionEvent e){
 			try{
-				this.remove(labRecordsButton);
-				this.remove(hcButton);
-				this.remove(ePrescribeButton);
-				
-				this.add(nameField);
-				this.add(DOBField);
-				this.add(prescriptionField);
-				this.add(save);
-				this.add(cancel);
-				
+				epPanel = new JPanel("e-prescribe");
+				epPanel.add(nameField);
+				epPanel.add(DOBField);
+				epPanel.add(prescriptionField);
+				epPanel.add(save);
+				epPanel.add(cancel);
 				save.addActionListener(saveEP);
+				this.add(epPanel);
 			}
 		}
 	}
