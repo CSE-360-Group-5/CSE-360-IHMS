@@ -16,8 +16,9 @@ public class DoctorFrame extends JPanel{
 	String name;
 	String DOB;
 	String prescription;
-	String filename = "test.txt";
+	String filename;
 	Writer writer;
+	int space;
 	
 	
 	public DoctorFrame() throws IOException{
@@ -56,14 +57,18 @@ public class DoctorFrame extends JPanel{
 	public class SaveEPButtonListener implements ActionListener{
 		void actionPerformed(ActionEvent e){
 			try{
-				writer = new BufferedWriter(new FileWriter(filename));
 				name = nameField.getText();
 				DOB = DOBField.getText();
 				prescription = prescriptionField.getText();
+				
+				//filename parser: "lastname_firstname.txt"
+				space = name.indexOf(“ “);
+				fileName = name.substring(space+1) + “_“ + name.substring(0, space-1) + “.txt”;
 			} catch (IOException e2) {
 				e2.printStackTrace();
 			}
 			try{
+				writer = new BufferedWriter(new FileWriter(filename));
 				writer.write(name+"\r\n");
 				writer.write(DOB+"\r\n");
 				writer.write(prescription);
