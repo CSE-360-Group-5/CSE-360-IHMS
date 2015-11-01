@@ -76,6 +76,14 @@ public class DoctorFrame extends JPanel{
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
+			finally {
+			try{
+				writer.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			}
+			
 			frame.remove(epPanel);
 			frame.validate();
 			frame.repaint();
