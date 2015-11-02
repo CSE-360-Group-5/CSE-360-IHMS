@@ -10,5 +10,6 @@ public class UpdateHCCMain {
 	frame.setSize(500, 300);
 	frame.add(hcframe);
 	frame.setVisible(true);
+	DoctorFrame dframe = new DoctorFrame();
 	}
 }
