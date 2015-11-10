@@ -3,7 +3,7 @@ DATABASE NAME: cse
 TABLES:
 1) patient
   - Columns:
-      * idpatient - INT (Primaty Key)
+      * idpatient - INT (Primary Key)
       * fname - VARCHAR(45)
       * lname - VARCHAR(45)
       * dob - VARCHAR(45)
@@ -44,3 +44,17 @@ TABLES:
         `labRecord` VARCHAR(1000) NOT NULL,
         `date` VARCHAR(45) NOT NULL,
     PRIMARY KEY (`recordID`));
+
+3) prescription
+  - Columns:
+    * prescriptionID - INT (Primary Key)
+    * patientID - INT
+    * prescription - VARCHAR(1000)
+    * date - VARCHAR(45)
+  - Query:
+      CREATE TABLE `cse`.`prescription` (
+          `prescriptionID` INT NOT NULL,
+          `patientID` INT NOT NULL,
+          `prescription` VARCHAR(1000) NOT NULL
+          `date` VARCHAR(45) NOT NULL,
+    PRIMARY KEY (`prescriptionID`));
