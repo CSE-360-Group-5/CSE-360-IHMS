@@ -16,98 +16,108 @@ import java.sql.Statement;
 import java.awt.event.*;
 
 public class StatsReportPanel extends JPanel{
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	/////////////////////////////////////////////////////////////////
 	// JButton
 	/////////////////////////////////////////////////////////////////
 
 	private JButton submitButton;
-	
+
 	/////////////////////////////////////////////////////////////////
 	// JPanel
 	/////////////////////////////////////////////////////////////////
-	
+
 	private JPanel submitPanel;
-	
+
 	/////////////////////////////////////////////////////////////////
 	// Arrays
 	/////////////////////////////////////////////////////////////////
-	
+
 	private String[] sex; // Sex array (Male, Female)
 	private String[] maritalStatus; // Marital status array (Single, Married)
 	private String[] education; // Education array (No Degree, High School or Equivalent, Some College, Bachelors, Masters, Doctorate)
 	private String[] race; // Race array (Asian, Latino, Black/African-American, Pacific Islander, Caucasian, Other
 	private String [] patientType; // Patient (Pediatric, Vascular, Neurologic, Gynocology, Orthopedic, Other)
-	
+
 	/////////////////////////////////////////////////////////////////
 	// JTextArea
 	/////////////////////////////////////////////////////////////////
-	
+
 	private JTextArea reportArea;
-	
+
 	/////////////////////////////////////////////////////////////////
 	// Database components
 	/////////////////////////////////////////////////////////////////
-	
+
 	private Connection conn;
 	private Statement statement;
 	private ResultSet rs;
-	
-	public StatsReportPanel() 
+
+	public StatsReportPanel()
 	{
 		/////////////////////////////////////////////////////////////////
 		// Database connection
 		/////////////////////////////////////////////////////////////////
-		
+
 		try
 		{
 			// "Load" the JDBC driver
 			Class.forName("java.sql.Driver");
-		
+
 			// Establish the connection to the database
 			String url = "jdbc:mysql://localhost:3306/cse";
 			conn = DriverManager.getConnection(url,"root","admin");
 		}
-		
+
 		catch (Exception e)
 		{
 			System.err.println("Got an exception!");
 			System.err.println(e.getMessage());
 		}
-		
+
 		// GUI elements and construction
 	    submitButton = new JButton("Generate");
 	    submitButton.addActionListener(new SubmitListener());
-	
+
 	    submitPanel = new JPanel();
 	    reportArea = new JTextArea(60,60);
 	    reportArea.setEditable(false);
 
 	    // Fill arrays with information from the database
-	    
+
 	    submitPanel.setLayout(new BoxLayout(submitPanel, BoxLayout.Y_AXIS));
 	    submitPanel.add(submitButton);
 	    submitPanel.add(reportArea);
-	
+
 	    add(submitPanel);
-	
+
 	}
-    
+
 	// Functional logic
     private class  SubmitListener implements ActionListener
     {
         public void actionPerformed(ActionEvent event) {
-        	
+
         	int count = 0;
         	int count2 = 0;
         	try
     		{
+					statement = conn.createStatement();
+					rs = statement.executeQuery("SELECT COUNT(fname) FROM patient AS NUMBEROFPATIENTS");
+					int size = rs.getInt("NUMBEROFPATIENTS");
+
+					sex = new String[size];
+					maritalStatus = new String[size];
+					education = new String[size];
+					race = new String[size];
+					patientType = new String[size];
+
     			statement = conn.createStatement();
     			rs = statement.executeQuery("SELECT * FROM patient");
-                
-                while ( rs.next() ) 
+
+                while ( rs.next() )
                 {
                 	sex[count] = rs.getString(7);
                 	System.out.println(count + " sex: " + rs.getString(7));
@@ -116,10 +126,10 @@ public class StatsReportPanel extends JPanel{
                 	race[count] = rs.getString(11);
                 	count++;
                 }
-                
+
                 statement = conn.createStatement();
                 rs = statement.executeQuery("SELECT * FROM staff");
-                while ( rs.next() ) 
+                while ( rs.next() )
                 {
                 	sex[count] = rs.getString(8);
                 	maritalStatus[count] = rs.getString(9);
@@ -127,26 +137,26 @@ public class StatsReportPanel extends JPanel{
                 	race[count] = rs.getString(11);
                 	count++;
                 }
-                
-                
+
+
                 statement = conn.createStatement();
                 rs = statement.executeQuery("SELECT * FROM appointments");
-                while ( rs.next() ) 
+                while ( rs.next() )
                 {
                 	patientType[count2] = rs.getString(3);
                 	count2++;
                 }
-                
+
     		}
     		catch (Exception e)
     		{
-    			System.err.println("Got an exception! "); 
+    			System.err.println("Got an exception! ");
                 System.err.println(e.getMessage());
                 System.err.println(e);
     		}
-        	
-        	
-        	
+
+
+
           // initialize all count variables to zero
           int numOfMales = 0;
           int numOfFemales = 0;
@@ -276,5 +286,5 @@ public class StatsReportPanel extends JPanel{
         }
     }
 
-  
+
 }
