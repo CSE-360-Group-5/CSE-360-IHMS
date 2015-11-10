@@ -49,12 +49,12 @@ TABLES:
   - Columns:
     * prescriptionID - INT (Primary Key)
     * patientID - INT
-    * prescription - VARCHAR(1000)
+    * prescriptionInfo - VARCHAR(1000)
     * date - VARCHAR(45)
   - Query:
     CREATE TABLE `cse`.`prescription` (
           `prescriptionID` INT NOT NULL,
           `patientID` INT NOT NULL,
-          `prescription` VARCHAR(1000) NOT NULL
+          `prescriptionInfo` VARCHAR(1000) NOT NULL,
           `date` VARCHAR(45) NOT NULL,
     PRIMARY KEY (`prescriptionID`));
