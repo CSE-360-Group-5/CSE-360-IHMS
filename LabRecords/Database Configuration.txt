@@ -52,7 +52,7 @@ TABLES:
     * prescription - VARCHAR(1000)
     * date - VARCHAR(45)
   - Query:
-      CREATE TABLE `cse`.`prescription` (
+    CREATE TABLE `cse`.`prescription` (
           `prescriptionID` INT NOT NULL,
           `patientID` INT NOT NULL,
           `prescription` VARCHAR(1000) NOT NULL
