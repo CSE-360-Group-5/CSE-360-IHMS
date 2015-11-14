@@ -9,38 +9,53 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 public class DoctorFrame extends JPanel{
 	JFrame frame;
 	JFrame searchPatientFrame;
+	
 	JPanel mainPanel;
 	JPanel epPanel;
+	
 	JButton labRecordsButton;
 	JButton hcButton;
 	JButton ePrescribeButton;
-	JButton cancel;
+	private JButton cancel;
 	JButton save;
+	
 	JTextField nameField;
 	JTextField DOBField;
 	JTextField prescriptionField;
+	
 	String presID;
 	String patientID;
 	String date;
 	String presInfo;
 	Writer writer;
+	String filename;
 	SaveEPButtonListener saveEP;
 	int space;
 
 	//Patient Search
 	private JLabel firstNameLabel;
 	private JLabel lastNameLabel;
+	private JLabel lastNameSearchLabel;
 	private JLabel prescriptionListLabel;
 	private JLabel patientListLabel;
 	private JLabel dateLabel;
 	private JLabel dobLabel;
 	private JLabel labRecordLabel;
+	private JLabel instructionsLabel1;
+	private JLabel instructionsLabel2;
+	private JLabel successLabel;
 
 	private JTextField firstNameField;
 	private JTextField lastNameField;
+	private JTextField firstNameSearchLabel;
 	private JTextField firstNameSearchField;
 	private JTextField lastNameSearchField;
 	private JTextField dobField;
@@ -48,7 +63,10 @@ public class DoctorFrame extends JPanel{
 
 	private JButton searchPatientButton;
 	private JButton selectPatientButton;
+	private JButton searchButton;
 	private JButton clearButton;
+	private JButton saveButton;
+	private JButton browseButton;
 
 	private JList<Patient> patientList;
 	private JList<Prescription> prescriptionList;
@@ -62,7 +80,6 @@ public class DoctorFrame extends JPanel{
 	private JScrollPane scrollPatientList;
 	private JScrollPane scrollSearchList;
 
-	private JFrame searchPatientFrame;
 
 	private JPanel firstNamePanel;
 	private JPanel firstNameSearch;
@@ -73,11 +90,16 @@ public class DoctorFrame extends JPanel{
 	private JPanel buttonPanel;
 	private JPanel searchFields;
 	private JPanel instructionsPanel;
-	private JPanel prescriptionListPanel;
 	private JPanel northPanel;
 	private JPanel centerNorthPanel;
 	private JPanel centerSouthPanel;
 	private JPanel centerPanel;
+	private JPanel patientInfoPanel;
+	private JPanel prescriptionListPanel;
+	
+	private JScrollPane scrollLabRecord;
+	private JScrollPane prescriptionScrollList;
+	private JScrollPane scrollList;
 
 
 	private Container patientContainer;
@@ -97,7 +119,7 @@ public class DoctorFrame extends JPanel{
 
 			// Establish the connection to the database
 			String url = "jdbc:mysql://localhost:3306/cse";
-			conn = DriverManager.getConnection(url,"root","admin");
+			conn = DriverManager.getConnection(url,"root","f00tball2015");
 		}
 
 		catch (Exception e)
@@ -145,6 +167,8 @@ public class DoctorFrame extends JPanel{
 		frame = new JFrame("Doctor");
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		frame.setSize(300,150); // set size of window
+
 
 		mainPanel.add(labRecordsButton);
 		mainPanel.add(hcButton);
@@ -219,7 +243,7 @@ public class DoctorFrame extends JPanel{
 		centerPanel.add(buttonPanel);
 
 		prescriptionListPanel = new JPanel(); // Record List Panel
-		prescriptionListPanel.setLayout(new BoxLayout(prescripionListPanel, BoxLayout.Y_AXIS));
+		prescriptionListPanel.setLayout(new BoxLayout(prescriptionListPanel, BoxLayout.Y_AXIS));
 		prescriptionListPanel.add(searchPatientButton);
 		prescriptionListPanel.add(Box.createRigidArea(new Dimension(0,10)));
 		prescriptionListPanel.add(prescriptionListLabel);
@@ -290,7 +314,12 @@ public class DoctorFrame extends JPanel{
 		prescriptionList = new JList<Prescription>(prescriptionVector); // creates a JList that show the content of the recordVector
 		prescriptionScrollList = new JScrollPane(prescriptionList); // add scroll option to the list
 		prescriptionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Allow the selection of only one item at a time
-		prescriptionList.addListSelectionListener(new ListListener()); // List listener
+	/*	prescriptionList.addListSelectionListener(new ListSelectionListener(){
+			public void valueChanged(LIstSelectionEvent evt) {
+				if(evt.getValueIsAdjusting())
+					return;
+			}
+		}; // List listener*/
 
 
 		//Patient List
@@ -325,11 +354,12 @@ public class DoctorFrame extends JPanel{
 		searchVector = new Vector<Patient>();
 	}
 
+	
 	public class SaveEPButtonListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-				name = nameField.getText();
-				DOB = DOBField.getText();
-				prescription = prescriptionField.getText();
+				String name = nameField.getText();
+				String DOB = DOBField.getText();
+				String prescription = prescriptionField.getText();
 
 				//filename parser: "lastname_firstname.txt"
 				space = name.indexOf(' ');
@@ -384,7 +414,7 @@ public class DoctorFrame extends JPanel{
 				epPanel.add(prescriptionField);
 				epPanel.add(save);
 				epPanel.add(cancel);
-				save.addActionListener(SaveEPButtonListener);
+				save.addActionListener(saveEP);
 				frame.add(epPanel);
 				frame.validate();
 				frame.repaint();
