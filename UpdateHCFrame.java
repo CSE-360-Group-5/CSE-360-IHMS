@@ -189,7 +189,7 @@ public class UpdateHCFrame extends JPanel{
 	}
 
 	
-	public class HCListener implements DocumentListener{
+	/*public class HCListener implements DocumentListener{
 		public void changedUpdate(DocumentEvent e){
 			
 		}
@@ -206,5 +206,5 @@ public class UpdateHCFrame extends JPanel{
 	public File getPatientConditions(){
 		return new File("/Users/timothymillea/Documents/CSE360/TestPatient");
 		
-	}
+	}*/
 }
