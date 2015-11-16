@@ -170,7 +170,7 @@ public class UpdateHCFrame extends JPanel{
 				try
 				{
 					statement = conn.createStatement();
-					statement.executeUpdate("INSERT INTO hcc ((patientID, HCC, date)" + "VALUES ('" + _patientID + "', '" + _conditions + "', '" + _date + "')");
+					statement.executeUpdate("INSERT INTO hcc (patientID, HCC, date)" + "VALUES ('" + _patientID + "', '" + _conditions + "', '" + _date + "')");
 				}
 				
 				catch (Exception e2)
