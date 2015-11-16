@@ -3,6 +3,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -32,6 +36,8 @@ public class DoctorFrame extends JPanel{
 	LabRecords record;
 	static JTextArea patients;
 	JTextField alert;
+	JButton print;
+	JFrame scriptFrame;
 	public DoctorFrame() throws IOException{
 		super();
 		frame = new JFrame("Doctor");
@@ -139,18 +145,59 @@ public class DoctorFrame extends JPanel{
 	}
 	public class ePrescribeButtonListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			JFrame scriptFrame = new JFrame();
+			scriptFrame = new JFrame();
 			ePanel = new JPanel();
 			ePanel.add(nameField);
 			ePanel.add(DOBField);
 			ePanel.add(prescriptionField);
 			ePanel.add(save);
 			ePanel.add(cancel);
+			print = new JButton("Print");
+			PrintListener ptListener = new PrintListener();
+			print.addActionListener(ptListener);
+			ePanel.add(print);
 			save.addActionListener(saveEP);
 			scriptFrame.add(ePanel);
 			scriptFrame.validate();
 			scriptFrame.repaint();
 			scriptFrame.setVisible(true);
+		}
+		
+		public class PrintListener implements ActionListener, Printable{
+			public void actionPerformed(ActionEvent e){
+				Graphics toPrint = scriptFrame.getGraphics();
+				PrinterJob job = PrinterJob.getPrinterJob();
+				job.setPrintable(this);
+				boolean doPrint = job.printDialog();
+				if(doPrint){
+					try{
+						job.print();
+					}
+					catch(PrinterException ex){
+						System.out.println("Problem printing");
+					}
+				}
+			}
+			
+			public int print(Graphics g, PageFormat pf, int page) throws PrinterException{
+				if(page > 0){
+					return NO_SUCH_PAGE;
+				}
+				Dimension dim = scriptFrame.getSize();
+				double frameHeight = dim.getHeight();
+				double frameWidth = dim.getWidth();
+				double pHeight = pf.getImageableHeight();
+				double pWidth = pf.getImageableHeight();
+				double pXStart = pf.getImageableX();
+				double pYStart = pf.getImageableY();
+				double xRatio = pWidth/frameWidth;
+				double yRatio = pHeight/frameHeight;
+				Graphics2D g2d = (Graphics2D)g;
+				g2d.translate(pXStart, pYStart);
+				g2d.scale(xRatio, yRatio);
+				scriptFrame.paint(g2d);
+				return PAGE_EXISTS;
+			}
 		}
 	}
 	
