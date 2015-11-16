@@ -20,7 +20,7 @@ public class UpdateHCFrame extends JPanel{
 	Connection conn = null;
 	ResultSet rs = null;
 	Statement stmt = null;
-	public UpdateHCFrame () throws IOException, SQLException{
+	public UpdateHCFrame () throws IOException{
 		super();
 		conditions = new JTextArea(20, 20);
 		//JButton edit = new JButton("Edit");
@@ -35,23 +35,25 @@ public class UpdateHCFrame extends JPanel{
 		alert = new JTextField();
 		this.add(alert);
 		alert.setVisible(false);
-		
-		try{
-			Class.forName("java.sql.Driver");
-			String url = "jdbc:mysql://localhost:3306/project";
-			conn = DriverManager.getConnection(url, "root", "D3ruut68%%");
-			System.out.println("connected");
-			stmt = conn.createStatement();
-			stmt.execute("INSERT INTO hpc (hpcRecords) VALUES (0)");
+		while(reader.ready()){
+			conditions.append(reader.readLine());
+		}
+		//try{
+			//Class.forName("java.sql.Driver");
+			//String url = "jdbc:mysql://localhost:3306/project";
+			//conn = DriverManager.getConnection(url, "root", "D3ruut68%%");
+			//System.out.println("connected");
+			//stmt = conn.createStatement();
+			//stmt.execute("INSERT INTO hpc (hpcRecords) VALUES (0)");
 			//rs = stmt.executeQuery("SELECT * FROM hpc");
-		}
-		catch(Exception e){
-			System.out.println("Could not connect to database");
-			System.out.println(e.getMessage());
-		}
-		if(rs != null){
-			conditions.append((String) rs.getObject(ALLBITS));
-		}
+		//}
+		//catch(Exception e){
+		//	System.out.println("Could not connect to database");
+		//	System.out.println(e.getMessage());
+		//}
+		//if(rs != null){
+		//	conditions.append((String) rs.getObject(ALLBITS));
+		//}
 		//FileReader hc = new FileReader(getPatientConditions());
 	}
 	
@@ -65,20 +67,21 @@ public class UpdateHCFrame extends JPanel{
 		public void actionPerformed(ActionEvent e){
 			try {
 				writer = new BufferedWriter(new FileWriter(filename)); //Saves the edits
+				writer.write(conditions.getText());
 			} catch (IOException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			}
-			try {
-				if(rs == null){
-					String cond = conditions.getText();
-					stmt.execute("INSERT INTO hpc" + "VALUES ("+ cond +")");
-				}
-				else{
-					String cond = conditions.getText();
-					rs = stmt.executeQuery("SELECT hpcRecords from hpc");
-					stmt.execute("UPDATE hpc SET hpcRecords = ("+ cond +")");
-				}
+			//try {
+				//if(rs == null){
+				//	String cond = conditions.getText();
+				//	stmt.execute("INSERT INTO hpc" + "VALUES ("+ cond +")");
+				//}
+				//else{
+				//	String cond = conditions.getText();
+				//	rs = stmt.executeQuery("SELECT hpcRecords from hpc");
+				//	stmt.execute("UPDATE hpc SET hpcRecords = ("+ cond +")");
+				//}
 				JOptionPane.showMessageDialog(alert,"Patient conditions updated.");
 				String[] emergency = {"Emergency", "emergency", "Severe", "severe", "Urgent", "urgent", "Critical", "critical", "Excessive", "excessive", "Broken", "broken", "Prolonged", "prolonged", "Seizure", "seizure"};
 				for(int i = 0; i < emergency.length; i++){
@@ -88,17 +91,16 @@ public class UpdateHCFrame extends JPanel{
 						break;
 					}
 				}
-			} catch (SQLException e1) {
+			//} catch (SQLException e1) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			finally{
+			//	e1.printStackTrace();
+			//}
+			
 			try {
 				writer.close();
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			}
 			}
 		}
 	}

@@ -7,7 +7,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.sql.SQLException;
 import java.util.*;
 
 public class DoctorFrame extends JPanel{
@@ -111,7 +110,7 @@ public class DoctorFrame extends JPanel{
 			UpdateHCFrame hcPanel = null;
 			try {
 				hcPanel = new UpdateHCFrame();
-			} catch (IOException | SQLException e1) {
+			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
