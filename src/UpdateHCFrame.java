@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
+import java.sql.*;
 public class UpdateHCFrame extends JPanel{
 	JTextArea conditions;
 	JButton edit;
@@ -15,7 +17,10 @@ public class UpdateHCFrame extends JPanel{
 	BufferedWriter writer;
 	BufferedReader reader;
 	JTextField alert;
-	public UpdateHCFrame () throws IOException{
+	Connection conn = null;
+	ResultSet rs = null;
+	Statement stmt = null;
+	public UpdateHCFrame () throws IOException, SQLException{
 		super();
 		conditions = new JTextArea(20, 20);
 		//JButton edit = new JButton("Edit");
@@ -30,9 +35,22 @@ public class UpdateHCFrame extends JPanel{
 		alert = new JTextField();
 		this.add(alert);
 		alert.setVisible(false);
-		while(reader.ready()){
-			conditions.append(reader.readLine()); //Reads file to text area
-			conditions.append("\n");
+		
+		try{
+			Class.forName("java.sql.Driver");
+			String url = "jdbc:mysql://localhost:3306/project";
+			conn = DriverManager.getConnection(url, "root", "D3ruut68%%");
+			System.out.println("connected");
+			stmt = conn.createStatement();
+			stmt.execute("INSERT INTO hpc (hpcRecords) VALUES (0)");
+			//rs = stmt.executeQuery("SELECT * FROM hpc");
+		}
+		catch(Exception e){
+			System.out.println("Could not connect to database");
+			System.out.println(e.getMessage());
+		}
+		if(rs != null){
+			conditions.append((String) rs.getObject(ALLBITS));
 		}
 		//FileReader hc = new FileReader(getPatientConditions());
 	}
@@ -52,10 +70,25 @@ public class UpdateHCFrame extends JPanel{
 				e2.printStackTrace();
 			}
 			try {
-				writer.write(conditions.getText());
+				if(rs == null){
+					String cond = conditions.getText();
+					stmt.execute("INSERT INTO hpc" + "VALUES ("+ cond +")");
+				}
+				else{
+					String cond = conditions.getText();
+					rs = stmt.executeQuery("SELECT hpcRecords from hpc");
+					stmt.execute("UPDATE hpc SET hpcRecords = ("+ cond +")");
+				}
 				JOptionPane.showMessageDialog(alert,"Patient conditions updated.");
-				
-			} catch (IOException e1) {
+				String[] emergency = {"Emergency", "emergency", "Severe", "severe", "Urgent", "urgent", "Critical", "critical", "Excessive", "excessive", "Broken", "broken", "Prolonged", "prolonged", "Seizure", "seizure"};
+				for(int i = 0; i < emergency.length; i++){
+					if(conditions.getText().contains(emergency[i])){
+						JFrame newFrame = null;
+						JOptionPane.showMessageDialog(newFrame, "Emergency: Notify EMS");
+						break;
+					}
+				}
+			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}

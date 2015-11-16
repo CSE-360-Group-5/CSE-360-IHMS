@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.sql.SQLException;
 import java.util.*;
 
 public class DoctorFrame extends JPanel{
@@ -18,6 +19,7 @@ public class DoctorFrame extends JPanel{
 	JButton ePrescribeButton;
 	JButton cancel;
 	JButton save;
+	JButton data;
 	JTextField nameField;
 	JTextField DOBField;
 	JTextField prescriptionField;
@@ -28,27 +30,35 @@ public class DoctorFrame extends JPanel{
 	Writer writer;
 	SaveEPButtonListener saveEP;
 	int space;
-	
+	LabRecords record;
+	static JTextArea patients;
+	JTextField alert;
 	
 	public DoctorFrame() throws IOException{
 		super();
 		frame = new JFrame("Doctor");
+		frame.setSize(500, 200);
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		
 		labRecordsButton = new JButton("Lab Records");
 		hcButton = new JButton("View/Update Health Care Conditions");
 		ePrescribeButton = new JButton("e-Prescribe");
+		data = new JButton("Patient Data");
 		save = new JButton("Save");
 		cancel = new JButton("Cancel");
+		
 		
 		nameField = new JTextField(name, 20);
 		DOBField = new JTextField(DOB,20);
 		prescriptionField = new JTextField(prescription, 50);
+		patients = new JTextArea(20, 20);
+		patients.setVisible(false);
 		
 		mainPanel.add(labRecordsButton);
 		mainPanel.add(hcButton);
 		mainPanel.add(ePrescribeButton);
+		mainPanel.add(data);
 		
 		hcButtonListener hcListener = new hcButtonListener();
 		labButtonListener labListener = new labButtonListener();
@@ -61,6 +71,7 @@ public class DoctorFrame extends JPanel{
 		
 		frame.add(mainPanel);
 		frame.setVisible(true);
+		alert = new JTextField();
 	}
 	
 	public class SaveEPButtonListener implements ActionListener{
@@ -100,18 +111,32 @@ public class DoctorFrame extends JPanel{
 			UpdateHCFrame hcPanel = null;
 			try {
 				hcPanel = new UpdateHCFrame();
-			} catch (IOException e1) {
+			} catch (IOException | SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			frame.add(hcPanel);
-			frame.validate();
-			frame.repaint();
+			JFrame hcFrame = new JFrame();
+			hcFrame.add(hcPanel);
+			hcFrame.setSize(500, 300);
+			hcFrame.setVisible(true);
 		}
 	}
 	public class labButtonListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			LabRecords record = new LabRecords();
+			record = new LabRecords();
+		}
+	}
+	public class patientListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			patients.setVisible(true);
+			mainPanel.add(patients);
+			mainPanel.validate();
+			mainPanel.repaint();
+			for(int i = 0; i < record.patientVector.size(); i++){
+				patients.append(record.patientVector.elementAt(i).getFirstName());
+				patients.append(record.patientVector.elementAt(i).getLastName());
+				patients.append(record.patientVector.elementAt(i).getDOB());
+			}
 		}
 	}
 	public class ePrescribeButtonListener implements ActionListener{

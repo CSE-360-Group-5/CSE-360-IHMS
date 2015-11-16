@@ -23,13 +23,13 @@ public class LabRecords {
 	JTextField lastNameField; // last name text field
 	JTextField dobField; // DOB field
 	JTextField dateField;
-	Vector<Patient> patientVector;
+	public Vector<Patient> patientVector;
 	Vector<Patient> searchVector;
 	Vector<Records> recordVector;
 	JLabel successLabel;
 	JFrame mainFrame;
 	JFrame searchPatientFrame;
-	JList<Patient> patientList;
+	public JList<Patient> patientList;
   public LabRecords() {
    	/////////////////////////////////////////////////////////////////
 	// Labels
@@ -240,7 +240,7 @@ public class LabRecords {
 	Container patientContainer = searchPatientFrame.getContentPane();
 	patientContainer.setLayout(new BoxLayout(patientContainer, BoxLayout.Y_AXIS));
 	patientContainer.add(patientListLabel);
-	patientContainer.add(searchScroll);
+	patientContainer.add(scrollPatientList);
 	patientContainer.add(selectPatientButton);
 	patientContainer.add(firstNamePanel);
 	patientContainer.add(lastNamePanel);
