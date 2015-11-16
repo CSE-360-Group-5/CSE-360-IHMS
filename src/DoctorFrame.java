@@ -12,7 +12,7 @@ import java.util.*;
 public class DoctorFrame extends JPanel{
 	JFrame frame;
 	JPanel mainPanel;
-	JPanel epPanel;
+	JPanel ePanel;
 	JButton labRecordsButton;
 	JButton hcButton;
 	JButton ePrescribeButton;
@@ -32,7 +32,6 @@ public class DoctorFrame extends JPanel{
 	LabRecords record;
 	static JTextArea patients;
 	JTextField alert;
-	
 	public DoctorFrame() throws IOException{
 		super();
 		frame = new JFrame("Doctor");
@@ -98,8 +97,8 @@ public class DoctorFrame extends JPanel{
 			}
 			}
 			
-			frame.remove(epPanel);
-			epPanel = null;
+			//frame.remove(ePanel);
+			//ePanel = null;
 			frame.validate();
 			frame.repaint();
 		}
@@ -140,16 +139,18 @@ public class DoctorFrame extends JPanel{
 	}
 	public class ePrescribeButtonListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-				epPanel = new JPanel();
-				epPanel.add(nameField);
-				epPanel.add(DOBField);
-				epPanel.add(prescriptionField);
-				epPanel.add(save);
-				epPanel.add(cancel);
-				save.addActionListener(saveEP);
-				frame.add(epPanel);
-				frame.validate();
-				frame.repaint();
+			JFrame scriptFrame = new JFrame();
+			ePanel = new JPanel();
+			ePanel.add(nameField);
+			ePanel.add(DOBField);
+			ePanel.add(prescriptionField);
+			ePanel.add(save);
+			ePanel.add(cancel);
+			save.addActionListener(saveEP);
+			scriptFrame.add(ePanel);
+			scriptFrame.validate();
+			scriptFrame.repaint();
+			scriptFrame.setVisible(true);
 		}
 	}
 	
