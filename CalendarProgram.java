@@ -338,6 +338,7 @@ public class CalendarProgram
 		docType = new JComboBox(doctorType);
 	
 		final JFormattedTextField dateField = new JFormattedTextField(new SimpleDateFormat("MM/dd/yyyy"));
+		dateField.setEditable(false);
 		java.util.Date date=new java.util.Date();
 		date.setDate(d1);
 		dateField.setValue(date); // today
