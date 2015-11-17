@@ -8,11 +8,13 @@
 public class Patient
 {
 	private int id;
+	private String ssn;
 	private String firstName;
 	private String lastName;
 	private String dob;
 	private String email;
 	private String password;
+	private String hcip;
 	private String sex;
 
 	private String maritalStatus;
@@ -38,12 +40,18 @@ public class Patient
 		dob = date;
     }
 	
-	//Getter method to access the first name of the patient
+	//Getter method to access the id of the patient
 	public int getpatientID()
 	{
 		return id;
 	}
 
+	//Getter method to access the SSN of the patient
+	public String getSSN()
+	{
+		return ssn;
+	}
+	
 	//Getter method to access the first name of the patient
 	public String getFirstName()
     {
@@ -72,6 +80,12 @@ public class Patient
 	public String getPassword()
 	{
 		return password;
+	}
+	
+	//Getter method to access the healthcare insurance provider of the patient
+	public String getHCIP()
+	{
+		return hcip;
 	}
 
 	//Getter method to access the sex of the patient
@@ -111,6 +125,12 @@ public class Patient
 	}
 	
 	//Mutator method to set the first name of the patient
+	public void setSSN(String _ssn)
+	{
+		ssn = _ssn;
+	}
+	
+	//Mutator method to set the first name of the patient
 	public void setFirstName(String _firstName)
 	{
 		firstName = _firstName;
@@ -140,6 +160,12 @@ public class Patient
 		password = _password;
 	}
 
+	//Mutator method to set the password of the patient
+	public void setHCIP(String _hcip)
+	{
+		hcip = _hcip;
+	}
+	
 	//Mutator method to set the sex of the patient
 	public void setSex(String _sex)
 	{
