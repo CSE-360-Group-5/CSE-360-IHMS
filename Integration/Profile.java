@@ -57,6 +57,7 @@ public class Profile extends JFrame
 	// Other variables
 	//////////////////////////////////////////////////////////////////
 	
+	private String fullName;
 	private String firstName;
 	private String lastName;
 	private String dob;
@@ -91,7 +92,13 @@ public class Profile extends JFrame
 	private Statement statement;
 	private ResultSet rs;
 	
-	public Profile(String database, final int id, String type)
+	//////////////////////////////////////////////////////////////////
+	// static variables
+	//////////////////////////////////////////////////////////////////
+	
+	static String hcr="";
+	
+	public Profile(String database, final int id, final String type)
 	{
 		
 		//////////////////////////////////////////////////////////////////
@@ -114,6 +121,30 @@ public class Profile extends JFrame
 			System.err.println(e.getMessage());
 		}
 		
+		
+		try
+		{
+			statement = conn.createStatement();
+			rs = statement.executeQuery("SELECT * FROM patient WHERE `idpatient` = " + id);
+			
+			while(rs.next())
+			{
+				hcr = rs.getString("HCR");
+			}
+			
+			statement = conn.createStatement();
+			rs = statement.executeQuery("SELECT * FROM staff WHERE `idstaff` = " + id);
+			
+			while(rs.next())
+			{
+				fullName = rs.getString("fname") + " " + rs.getString("lname");
+			}
+		}
+		catch (SQLException e) {
+			System.err.println("Got an exception!");
+			System.err.println(e.getMessage());
+		}
+		
 		//////////////////////////////////////////////////////////////////
 		// Instantiate components
 		//////////////////////////////////////////////////////////////////
@@ -128,8 +159,13 @@ public class Profile extends JFrame
 		        putValue(SHORT_DESCRIPTION, "Create new appointments");
 		    }
 		    public void actionPerformed(ActionEvent e) {
-		    	MakeAppointments appointFrame = new MakeAppointments(id);
-		    	appointFrame.setVisible(true);
+		    	if(hcr.equals("empty"))
+		    		JOptionPane.showMessageDialog(centerWest, "Sorry, you don't have Healthcare Report uploaded, please contact the HSP");
+		    	else
+		    	{
+		    		MakeAppointments appointFrame = new MakeAppointments(id);
+		    		appointFrame.setVisible(true);
+		    	}
 		    }
 		}
 		Action appAction = new AppointmentAction();
@@ -163,17 +199,43 @@ public class Profile extends JFrame
 		}
 		Action allPatientAction = new AllPatientAction();
 		
+		// Action to view all patient registered
+		class SearchPatientAction extends AbstractAction
+		{ 
+			private static final long serialVersionUID = 1L;
+			public SearchPatientAction() {
+				putValue(SHORT_DESCRIPTION, "View list of all patients");
+			}
+			public void actionPerformed(ActionEvent e) {
+				SearchPatient sp = new SearchPatient(type, id);
+				sp.setVisible(true);
+				dispose();
+			}
+		}
+		Action searchPatientAction = new SearchPatientAction();
+		
 		// Action to open Statistical Report
 		class StatsReportAction implements MenuListener
 		{
 		    public void menuSelected(MenuEvent e) {
 		        StatsReport report = new StatsReport();
-		    	setAlwaysOnTop(false);
 		        report.setVisible(true);
 		        report.setAlwaysOnTop(true);
 		    }
 		    public void menuDeselected(MenuEvent e){}
 		    public void menuCanceled(MenuEvent e){}
+		}
+		
+		// Action to open Statistical Report
+		class FinalizeAppAction implements MenuListener
+		{
+			public void menuSelected(MenuEvent e) {
+				FinalizeAppointment finApp = new FinalizeAppointment(type, fullName);
+				finApp.setVisible(true);
+				finApp.setAlwaysOnTop(true);
+			}
+			public void menuDeselected(MenuEvent e){}
+			public void menuCanceled(MenuEvent e){}
 		}
 		
 		 // Action to open lab record
@@ -189,7 +251,6 @@ public class Profile extends JFrame
 		    	labRec.setVisible(true);
 		    }
 		}
-		
 		Action labAction = new LabRecAction();
 		
 		// MENU COMPONENTS
@@ -223,9 +284,11 @@ public class Profile extends JFrame
 			menuOp1.setText("Profile");
 			menuOp2.setText("Patients");
 			menuOp3.setText("Appointments Request");
+			menuOp3.addMenuListener(new FinalizeAppAction());
 			menuOp4.setText("View Medical Alerts");
 			
-			menuItem1 = new JMenuItem("Search Patient");
+			menuItem1 = new JMenuItem(searchPatientAction);
+			menuItem1.setText("Search Patient");
 			
 			menuOp2.add(menuItem1);
 			
@@ -239,11 +302,13 @@ public class Profile extends JFrame
 			menuOp1.setText("Profile");
 			menuOp2.setText("Patients");
 			menuOp3.setText("Appointment Request");
+			menuOp3.addMenuListener(new FinalizeAppAction());
 			menuOp4.setText("View Medical Alerts");
 			menuOp5.setText("Generate Statistical Report");
 			menuOp5.addMenuListener(new StatsReportAction());
 			
-			menuItem1 = new JMenuItem("Search Patient");
+			menuItem1 = new JMenuItem(searchPatientAction);
+			menuItem1.setText("Search Patient");
 			menuOp6 = new JMenu("List of Registered Patient");
 			menuOp6.setMnemonic(KeyEvent.VK_S);
 			
@@ -285,7 +350,8 @@ public class Profile extends JFrame
 			menuOp1.setText("Profile");
 			menuOp2.setText("Patients");
 			
-			menuItem1 = new JMenuItem("Search Patients");
+			menuItem1 = new JMenuItem(searchPatientAction);
+			menuItem1.setText("Search Patient");
 			
 			menuOp2.add(menuItem1);
 			
@@ -297,7 +363,8 @@ public class Profile extends JFrame
 			menuOp1.setText("Profile");
 			menuOp2.setText("Patients");
 			
-			menuItem1 = new JMenuItem("Search Patients");
+			menuItem1 = new JMenuItem(searchPatientAction);
+			menuItem1.setText("Search Patient");
 			
 			menuOp2.add(menuItem1);
 			
@@ -325,7 +392,7 @@ public class Profile extends JFrame
 		
 		// JTEXTAREAS
 		appointmentListArea = new JTextArea(15, 10);
-		appointmentListArea.setText("No appointments scheduled.");
+		appointmentListArea.setText("No appointments approved.");
 		appointmentListArea.setEditable(false);
 		
 		// VECTOR
@@ -365,6 +432,7 @@ public class Profile extends JFrame
 		sexLabel.setText(sexLabel.getText() + sex);
 		
 		// DATABASE SELECT TO GET APPOINTMENT LIST
+		boolean hasAppointment = false;
 		if(type.equals("Patient"))
 		{
 			try
@@ -376,14 +444,19 @@ public class Profile extends JFrame
 					appointmentListArea.setText("");
 					rs.previous();
 				}
-				while(rs.next()){
-					Appointment a1 = new Appointment(rs.getString("docName"),rs.getString("month"),rs.getString("year"),rs.getString("day"),rs.getString("time"),rs.getString("docType"),rs.getInt("row"),rs.getInt("col"),rs.getInt("patientID"),rs.getInt("appointmentsID"));
-					if(a1.getFin()){}
-					else{
+				while(rs.next())
+				{
+					Appointment a1 = new Appointment(rs.getString("docName"),rs.getString("month"),rs.getString("year"),rs.getString("day"),rs.getString("time"),rs.getInt("row"),rs.getInt("col"),rs.getInt("patientID"),rs.getInt("appointmentsID"));
+					if(rs.getString("finalized").equals("true") || !rs.getString("status").equals("approved")){}
+					else
+					{
+						hasAppointment = true;
 						appointmentList.add(a1);
 						appointmentListArea.append(a1.toStringPatient());
 					}
 				}
+				if(!hasAppointment)
+					appointmentListArea.setText("No appointments approved.");
 			}
 			catch (SQLException e)
 			{
@@ -396,20 +469,25 @@ public class Profile extends JFrame
 			try
 			{
 				statement = conn.createStatement();
-				rs = statement.executeQuery("SELECT * FROM appointments WHERE `docName` = '" + fullNameLabel.getText() + "'");
-				if(rs.next() && rs.getString("finalized").equals("false"))
+				rs = statement.executeQuery("SELECT * FROM appointments WHERE `docName` = '" + fullName + "';");
+				if(rs.next() || rs.getString("finalized").equals("false"))
 				{
 					appointmentListArea.setText("");
 					rs.previous();
 				}
-				while(rs.next()){
-					Appointment a1 = new Appointment(rs.getString("docName"),rs.getString("month"),rs.getString("year"),rs.getString("day"),rs.getString("time"),rs.getString("docType"),rs.getInt("row"),rs.getInt("col"),rs.getInt("patientID"),rs.getInt("appointmentsID"));
-					if(a1.getFin()){}
-					else{
+				while(rs.next())
+				{
+					Appointment a1 = new Appointment(rs.getString("docName"),rs.getString("month"),rs.getString("year"),rs.getString("day"),rs.getString("time"),rs.getInt("row"),rs.getInt("col"),rs.getInt("patientID"),rs.getInt("appointmentsID"));
+					if(rs.getString("finalized").equals("true") || !rs.getString("status").equals("approved")){}
+					else
+					{
+						hasAppointment = true;
 						appointmentList.add(a1);
 						appointmentListArea.append(a1.toStringDoctor());
 					}
 				}
+				if(!hasAppointment)
+					appointmentListArea.setText("No appointments approved.");
 			}
 			catch (SQLException e)
 			{
