@@ -138,7 +138,7 @@ public class StaffK {
 		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Close when X is clicked
 		fappoin=new JButton("Finalize Appointment");
 		upload=new JButton("Upload Medical Records");
-		update=new JButton("Update Medical Records");
+		update=new JButton("View/Update Medical Records");
 		epresc=new JButton("Access E-Prescriptions");
 		staff=new JPanel();
 		staff.setSize(400,400);
@@ -393,7 +393,7 @@ public class StaffK {
 
 		
 		// Search for patient
-		fUpdate1 = new JFrame("Update Medical Report");
+		fUpdate1 = new JFrame("View/Update Medical Record");
 		fUpdate1.setSize(330, 375);
 		pane = fUpdate1.getContentPane();
 		pane.setLayout(null);
@@ -428,7 +428,7 @@ public class StaffK {
 		
 		
 		//Update reports
-		fUpdate2 = new JFrame("Update Medical Report");
+		fUpdate2 = new JFrame("View Medical Record");
 		fUpdate2.setSize(330, 375);
 		pane2 = fUpdate2.getContentPane();
 		pane2.setLayout(null);
@@ -436,7 +436,7 @@ public class StaffK {
 		
 	
 		pan2 = new JPanel(null);
-		revise = new JButton("Revise");
+		revise = new JButton("Update");
 		delete = new JButton("delete");
 		newSearch = new JButton("Search");
 		
@@ -477,7 +477,7 @@ public class StaffK {
 		
 		
 		//add panel for revise 
-		fRevise = new JFrame("Update Medical Report");
+		fRevise = new JFrame("Update Medical Record");
 		fRevise.setSize(330, 375);
 		pane3 = fRevise.getContentPane();
 		pane3.setLayout(null);
