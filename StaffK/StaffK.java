@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.*; 
-import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 
 public class StaffK {
@@ -29,7 +28,7 @@ public class StaffK {
 	static ArrayList presc=new ArrayList();
 	static ArrayList pat = new ArrayList();
 	static Vector doctorsVector, patientVector, time, month, day, year;
-	
+
 	static JLabel entInfo, report2, error, fLabel, lLabel, idLabel;
 	static JButton search, revise, delete, submit, cancel, newSearch, ok;
 	static JFrame fUpdate1,fUpdate2,fRevise,fError;
@@ -37,7 +36,7 @@ public class StaffK {
 	static JTextField fName, lName, patID;
 	static JPanel pan1,pan2,pan3,pan4;
 	static JTextArea report;
-	
+
 	static JLabel patID2, patName, patDOB, viewRecord, browse, error1, complete, curPat;
 	//static JButton submit, upload, search, ok;
 	static JFrame fUpload1, fUpload2; //fError;
@@ -47,20 +46,20 @@ public class StaffK {
 	static JComboBox reports;
 	static String[] upReports = {"Report1", "Report2", "Report3"};
 	static JFileChooser fc;
-	
+
 	static JRadioButton doc1, doc2, doc3;
 	static JButton enter;
 	static JScrollPane scal; 				//The scrollpane
 	static JPanel pcal;
 	static JTable Cal;
-	
+
 	//Static Container pane;
 	static DefaultTableModel mcal; 			//Table model
 	static JFrame fmain, docFrame, pFrame;
 	static String docSelected, pSelected, test;
 	static String t,d,m,y;
 	static String[] p;
-	
+
 	//Database
 	static Connection conn;
 	static Statement statement;
@@ -69,32 +68,32 @@ public class StaffK {
 	public static void main (String[] args)
 	{
 		try
-	    {
+		{
 
-	      // Step 1: "Load" the JDBC driver
+			// Step 1: "Load" the JDBC driver
 
-	      Class.forName("java.sql.Driver"); 
+			Class.forName("java.sql.Driver"); 
 
-	      // Step 2: Establish the connection to the database 
+			// Step 2: Establish the connection to the database 
 
-	      String url = "jdbc:mysql://localhost:3306/cse"; 
+			String url = "jdbc:mysql://localhost:3306/cse"; 
 
-	      conn = DriverManager.getConnection(url,"root","admin");  
+			conn = DriverManager.getConnection(url,"root","admin");  
 
-	      System.out.println("connected");
+			System.out.println("connected");
 
-	    }
+		}
 
-	    catch (Exception e)
+		catch (Exception e)
 
-	    {
+		{
 
-	      System.err.println("D'oh! Got an exception!"); 
+			System.err.println("D'oh! Got an exception!"); 
 
-	      System.err.println(e.getMessage()); 
+			System.err.println(e.getMessage()); 
 
-	    } 
-		
+		} 
+
 		pat.add("Test1");
 		pat.add("Test2");
 		pat.add("Test3");
@@ -110,27 +109,9 @@ public class StaffK {
 			}*/
 		}
 		catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//this was used to test but add rows in database instead
-		/*Prescription hope = new Prescription("drug","Test1","Doctor","Direction",23,24,10,2015, "Report", 12059, 19011995);
-		presc.add(hope);
-		System.out.println(presc.get(0).getPat());
-		presc.add(new Prescription("drug2","Test2","Doctor","Direction",23,24,10,2015, "Report", 12059, 27082004));
-		System.out.println(presc.get(1).getPat());
-		presc.add(new Prescription("drug2","Test2","Doctor","Direction",23,24,10,2015, "Report", 12059, 18061998));
-		System.out.println(presc.get(2).getPat());
-		presc.add(new Prescription("drug2","Test2","Doctor","Direction",23,24,10,2015, "Report", 12059, 13121994));
-		System.out.println(presc.get(3).getPat());
-		presc.add(new Prescription("drug2","Test2","Doctor","Direction",23,24,10,2015, "Report", 12059, 06062007));
-		System.out.println(presc.get(4).getPat());
-		presc.add(new Prescription("drug2","Test2","Doctor","Direction",23,24,10,2015, "Report", 12059, 19011990));
-		System.out.println(presc.get(5).getPat());
-		presc.add(new Prescription("drug2","Test3","Doctor","Direction",23,24,10,2015, "Report", 12059, 12121992));
-		Prescription test=presc.get(0);
-		System.out.println(test.getPat());
-		*/
+
 		main=new JFrame ("Staff Functions");
 		main.setSize(400,400); //Set size to 400x400 pixels
 		pane = main.getContentPane();
@@ -138,7 +119,7 @@ public class StaffK {
 		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Close when X is clicked
 		fappoin=new JButton("Finalize Appointment");
 		upload=new JButton("Upload Medical Records");
-		update=new JButton("View/Update Medical Records");
+		update=new JButton("Update Medical Records");
 		epresc=new JButton("Access E-Prescriptions");
 		staff=new JPanel();
 		staff.setSize(400,400);
@@ -152,29 +133,29 @@ public class StaffK {
 		staff.add(Box.createVerticalStrut(50));
 		staff.add(epresc);
 		fappoin.addActionListener(new ActionListener() {
-	        public void actionPerformed(ActionEvent event) 
-	        {
-	        	FinalizeAppointment();
-	        	System.out.println("Testf");
-	        }
+			public void actionPerformed(ActionEvent event) 
+			{
+				FinalizeAppointment();
+				System.out.println("Testf");
+			}
 		});
-	    upload.addActionListener(new ActionListener() {
-	        public void actionPerformed(ActionEvent event){
-	        	UploadMedicalReports();
-	        	System.out.println("Testu");
-	        }
-	    });
-	    update.addActionListener(new ActionListener() {
-	        public void actionPerformed(ActionEvent event){
-	        	UpdateMedicalReports();
-	        	System.out.println("Testud");
-	        }
-	    });
-	    epresc.addActionListener(new ActionListener() {
-	        public void actionPerformed(ActionEvent event){
-	        	epres(presc);
-	        }
-	    });
+		upload.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event){
+				UploadMedicalReports();
+				System.out.println("Testu");
+			}
+		});
+		update.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event){
+				UpdateMedicalReports();
+				System.out.println("Testud");
+			}
+		});
+		epresc.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event){
+				epres(presc);
+			}
+		});
 		fappoin.setAlignmentX(Component.CENTER_ALIGNMENT);
 		upload.setAlignmentX(Component.CENTER_ALIGNMENT);
 		update.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -183,13 +164,13 @@ public class StaffK {
 		main.setResizable(false);
 		main.setVisible(true);
 	}
-	public static void epres( ArrayList p){
+	public static void epres( ArrayList p)
+	{
 		final ArrayList temp=new ArrayList();
 		final JFrame frame=new JFrame("E-Prescriptions");
 		Container pane;
 		JPanel panep = new JPanel(null);
-		JButton next=new JButton(">>");
-		JButton prev=new JButton("<<");
+
 		final JComboBox patients=new JComboBox(pat.toArray());
 		frame.setSize(400,400);
 		pane=frame.getContentPane();
@@ -255,11 +236,10 @@ public class StaffK {
 		Container pane;
 		final JPanel panep = new JPanel(null);
 		final JPanel panep2= new JPanel(null);
-		JPanel panep3=new JPanel(null);
-		JButton next=new JButton(">>");
-		JButton prev=new JButton("<<");
-		JLabel [] pt=new JLabel[p.size()],pi=new JLabel[p.size()];
-		
+		JButton next = new JButton(">>");
+		JButton prev = new JButton("<<");
+		JLabel [] pt = new JLabel[p.size()],pi=new JLabel[p.size()];
+
 		for(int i=0;i<p.size();i++){
 			pt[i]=new JLabel("Drug: "+((Prescription) p.get(i)).getDrug()+",  Doctor: "+((Prescription) p.get(i)).getDoc());
 			pi[i]=new JLabel("\tDirections: "+((Prescription) p.get(i)).getDir()+",  Date: "+Integer.toString(((Prescription) p.get(i)).getMonth())+"/"+Integer.toString(((Prescription) p.get(i)).getDate())+"/"+Integer.toString(((Prescription) p.get(i)).getYear()));
@@ -274,31 +254,32 @@ public class StaffK {
 		panep2.setMaximumSize(new Dimension(450,25));
 		panep2.setLayout(new BoxLayout(panep2, BoxLayout.X_AXIS));
 		panep.setLayout(new BoxLayout(panep, BoxLayout.Y_AXIS));
-		JLabel pa=new JLabel("Choose the Patient:");
+		//JLabel pa = new JLabel("Choose the Patient:");
 		panep.add(patients);
 		panep.add(Box.createVerticalStrut(15));
+		
 		for(int st=start;st<5&&st<p.size();st++){
 			panep.add(pt[st]);
 			panep.add(Box.createVerticalStrut(5));
 			panep.add(pi[st]);
 			panep.add(Box.createVerticalStrut(20));
 		}
+		
 		panep2.add(prev);
-		//panep2.add(Box.createHorizontalStrut(300));
 		panep2.add(next);
 		patients.setMaximumSize(new Dimension(250, 25));
 		next.addActionListener(new ActionListener() {
-	        public void actionPerformed(ActionEvent event){
-	        	if(s+5>=p.size()){
-	        		JOptionPane.showMessageDialog (null, "Error there are no more Prescriptions", "Error", JOptionPane.INFORMATION_MESSAGE);
-	        	}
-	        }
-	    });
+			public void actionPerformed(ActionEvent event){
+				if(s+5>=p.size()){
+					JOptionPane.showMessageDialog (null, "Error there are no more Prescriptions", "Error", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		});
 		prev.addActionListener(new ActionListener() {
-	        public void actionPerformed(ActionEvent event){
-	        	//frame.setVisible(true);
-	        }
-	    });
+			public void actionPerformed(ActionEvent event){
+				//frame.setVisible(true);
+			}
+		});
 		patients.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 				String name= (String) pat.get(patients.getSelectedIndex());
@@ -345,60 +326,39 @@ public class StaffK {
 		panep.setAlignmentY(Component.LEFT_ALIGNMENT);
 		frame.setResizable(false);
 		frame.setVisible(true);
-		
+
 	}
-	
+
 	public static void UpdateMedicalReports()
 	{
 		// Create connection to database
 		try 
 		{ 
-		// "Load" the JDBC driver 
+			// "Load" the JDBC driver 
 			Class.forName("java.sql.Driver"); 
-		
-		 
-		// Establish the connection to the database 
+
+
+			// Establish the connection to the database 
 			String url = "jdbc:mysql://localhost:3306/cse"; 
 			conn = DriverManager.getConnection(url,"root","admin"); 
 			System.out.println("conected");
 		} 
- 
-		 
+
+
 		catch (Exception e) 
 		{ 
 			System.err.println("Got an exception!"); 
 			System.err.println(e.getMessage()); 
 		} 
-		
-		
-		// create patient in database for testing
-		/*
-		try 
-		{ 
-			statement = conn.createStatement(); 
-			rs = statement.executeQuery("SELECT * FROM patient"); 
-		 			             
-			
-				statement = conn.createStatement(); 
-				//statement.executeUpdate("INSERT INTO patient (idpatient, fname, lname, dob, email, password, sex, medHistory, mstatus, education, race)" + "VALUES ('" + 1 + "', '" + "Joshua" + "', '" + "Liddell" + "', '" + "27021985" + "', '" + "email" + "', '" + "password" + "', '" + "male" + "', '" + "medical report" + "', '" + "mstatus" + "', '" + "elvl" + "', '" + "prace" + "')"); 
-		 
-			
-		} 
-		catch (Exception e) 
-		{ 
-			System.err.println("Got an exception! ");  
-			System.err.println(e.getMessage());  
-		}
-		*/
 
-		
+
 		// Search for patient
-		fUpdate1 = new JFrame("View/Update Medical Record");
+		fUpdate1 = new JFrame("Update Medical Report");
 		fUpdate1.setSize(330, 375);
 		pane = fUpdate1.getContentPane();
 		pane.setLayout(null);
 		//fUpdate1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	
+
 		pan1 = new JPanel(null);
 		fLabel = new JLabel("First Name");
 		lLabel = new JLabel("Last Name");
@@ -407,7 +367,7 @@ public class StaffK {
 		fName = new JTextField(10);
 		lName = new JTextField(10);
 		patID = new JTextField(10);
-		
+
 		pane.add(pan1);		
 		pan1.add(fLabel);
 		pan1.add(lLabel);
@@ -416,8 +376,8 @@ public class StaffK {
 		pan1.add(search);
 		pan1.add(patID);
 		pan1.add(idLabel);
-		
-		
+
+
 		fLabel.setBounds(10, 40, 200, 40);
 		fName.setBounds(10, 75, 100, 30);
 		lLabel.setBounds(170, 40, 200, 40);
@@ -425,81 +385,83 @@ public class StaffK {
 		search.setBounds(10, 250, 80, 40);
 		idLabel.setBounds(10, 125, 200, 40);
 		patID.setBounds(10, 160, 100, 30 );
-		
-		
+
+
 		//Update reports
-		fUpdate2 = new JFrame("View Medical Record");
+		fUpdate2 = new JFrame("Update Medical Report");
 		fUpdate2.setSize(330, 375);
 		pane2 = fUpdate2.getContentPane();
 		pane2.setLayout(null);
 		fUpdate2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-	
+
+
 		pan2 = new JPanel(null);
-		revise = new JButton("Update");
+		revise = new JButton("Revise");
 		delete = new JButton("delete");
 		newSearch = new JButton("Search");
-		
-		
+
+
 		//insert the medical report
 		try 
 		{ 
 			statement = conn.createStatement(); 
-			rs = statement.executeQuery("SELECT * FROM patient");
-			rs.next();
-			
-			
-			report2 = new JLabel("<html>" + rs.getString("medHistory"));
-			report = new JTextArea(rs.getString("medHistory"));
-			//report.setLineWrap(true);
-			
+			rs = statement.executeQuery("SELECT * FROM patient WHERE `idpatient`='10001';");
+
+			while(rs.next())
+			{
+				report2 = new JLabel("<html>" + rs.getString("medHistory"));
+				report = new JTextArea(rs.getString("medHistory"));
+			}
+
+			rs.close();
+
 		}
 		catch (Exception e) 
 		{ 
 			System.err.println("Got an exception! ");  
 			System.err.println(e.getMessage());  
 		}
-		
-		
-		
+
+
+
 		pane2.add(pan2);
 		pan2.add(report2);
 		pan2.add(revise);
 		pan2.add(newSearch);
 		pan2.add(delete);
-		
+
 		report2.setBounds(7, 10, 300, 200);
 		revise.setBounds(10, 290, 80, 40);
 		newSearch.setBounds(115,290,80,40);
 		delete.setBounds(220, 290, 80, 40);
-		
 
-		
-		
+
+
+
 		//add panel for revise 
-		fRevise = new JFrame("Update Medical Record");
+		fRevise = new JFrame("Update Medical Report");
 		fRevise.setSize(330, 375);
 		pane3 = fRevise.getContentPane();
 		pane3.setLayout(null);
 		fRevise.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		pan3 = new JPanel(null);
 		//report = new JTextArea(temp.getReport());   moved up to try statement
-		
+
 		submit = new JButton("Submit");
 		cancel = new JButton("Cancel");
-		
-		
+
+
 		pane3.add(pan3);
 		pan3.add(report);
 		pan3.add(submit);
 		pan3.add(cancel);
-		
+
 		report.setBounds(7, 10, 300, 200);
 		submit.setBounds(10, 290, 80, 40);
 		cancel.setBounds(240, 290, 80, 40);
-	
-		
+
+
 		search.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent event)
@@ -509,22 +471,24 @@ public class StaffK {
 				String patID1 = patID.getText();
 				boolean found = true;
 
-				
+
 				try 
 				{ 
 					statement = conn.createStatement(); 
 					rs = statement.executeQuery("SELECT * FROM patient");
-					
+
 					//rs.next();
-					
+
 					while(rs.next())
 					{
 						if(rs.getString("fname").equalsIgnoreCase(fName1)&&rs.getString("lname").equalsIgnoreCase(lName1) && Integer.toString(rs.getInt("idpatient")).equals(patID1))
 						{
 							fUpdate2.setVisible(true);
 							fUpdate1.setVisible(false);
-							rs.absolute(Integer.parseInt(patID1));
-							report2.setText("<html>" + rs.getString("medHistory"));
+							//rs.absolute(Integer.parseInt(patID1));
+							while(rs.next())
+								report2.setText("<html>" + rs.getString("medHistory"));
+
 							found = true;
 						}
 						else
@@ -549,23 +513,25 @@ public class StaffK {
 								//error();
 							}
 						}
-						
+
 						if (found == false)
 						{
 							error();
 						}
 					}
-			}
+					rs.close();
+				}
+
 				catch (Exception e) 
 				{ 
 					System.err.println("Got an exception! ");  
 					System.err.println(e.getMessage());  
 				}
-				
-					
+
+
 			}
 		});
-		
+
 		delete.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent event)
@@ -576,21 +542,22 @@ public class StaffK {
 					statement = conn.createStatement(); 
 					String del = " ";
 					statement.executeUpdate("UPDATE patient SET " + "`medHistory`='" + del + "' WHERE `idpatient`='" + (Integer.parseInt(patID1)) + "';"); 
-							
-			
+
+
 
 					statement = conn.createStatement(); 
-					rs = statement.executeQuery("SELECT * FROM patient");
-					rs.absolute(Integer.parseInt(patID1));
-				
-					
-					report2.setText("<html>" + rs.getString("medHistory"));
-					fUpdate2.setVisible(true);
-					fUpdate1.setVisible(false);
-				
-				
+					rs = statement.executeQuery("SELECT * FROM patient WHERE `idpatient`="+patID1);
+					//rs.absolute(Integer.parseInt(patID1));
+
+					while(rs.next())
+					{
+						report2.setText("<html>" + rs.getString("medHistory"));
+						fUpdate2.setVisible(true);
+						fUpdate1.setVisible(false);
+					}
+
 				}
-			
+
 				catch (Exception e) 
 				{ 
 					System.err.println("Got an exception! ");  
@@ -598,17 +565,17 @@ public class StaffK {
 				}
 			}
 		});
-		
+
 		newSearch.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent event)
 			{
 				fUpdate1.setVisible(true);
 				fUpdate2.setVisible(false);
-				
+
 			}
 		});
-		
+
 		revise.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent event)
@@ -617,17 +584,19 @@ public class StaffK {
 				try 
 				{ 
 					statement = conn.createStatement(); 
-					rs = statement.executeQuery("SELECT * FROM patient");
-					rs.absolute(Integer.parseInt(patID1));
-					
-				
-				report.setText(rs.getString("medHistory"));
-				fRevise.setVisible(true);
-				fUpdate2.setVisible(false);
-				fUpdate1.setVisible(false);
-				
+					rs = statement.executeQuery("SELECT * FROM patient WHERE `idpatient`=" + patID1);
+					//rs.absolute(Integer.parseInt(patID1));
+
+					while(rs.next())
+					{
+						report.setText(rs.getString("medHistory"));
+						fRevise.setVisible(true);
+						fUpdate2.setVisible(false);
+						fUpdate1.setVisible(false);
+					}
+
 				}
-				
+
 				catch (Exception e) 
 				{ 
 					System.err.println("Got an exception! ");  
@@ -635,7 +604,7 @@ public class StaffK {
 				}
 			}
 		});
-		
+
 		submit.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent event)
@@ -646,27 +615,29 @@ public class StaffK {
 					String patID1 = patID.getText();
 					statement = conn.createStatement(); 
 					statement.executeUpdate("UPDATE patient SET " + "`medHistory`='" + editReport + "' WHERE `idpatient`='" + (Integer.parseInt(patID1)) + "';"); 
-					
+
 					statement = conn.createStatement(); 
-					rs = statement.executeQuery("SELECT * FROM patient");
-					rs.absolute(Integer.parseInt(patID1));
-				
-		
-					report2.setText("<html>" + rs.getString("medHistory"));
-					fUpdate2.setVisible(true);
-					fRevise.setVisible(false);
-					fUpdate1.setVisible(false);
+					rs = statement.executeQuery("SELECT * FROM patient WHERE `idpatient`=" + patID1);
+					//rs.absolute(Integer.parseInt(patID1));
+
+					while(rs.next())
+					{
+						report2.setText("<html>" + rs.getString("medHistory"));
+						fUpdate2.setVisible(true);
+						fRevise.setVisible(false);
+						fUpdate1.setVisible(false);
+					}
 				}
-				
+
 				catch (Exception e) 
 				{ 
 					System.err.println("Got an exception! ");  
 					System.err.println(e.getMessage());  
 				}
-				
+
 			}
 		});
-		
+
 		cancel.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent event)
@@ -674,7 +645,7 @@ public class StaffK {
 				fUpdate2.setVisible(true);
 				fRevise.setVisible(false);
 				fUpdate1.setVisible(false);
-				
+
 			}
 		});
 
@@ -694,52 +665,52 @@ public class StaffK {
 		pane4 = fError.getContentPane();
 		pane4.setLayout(null);
 		fError.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		pan4 = new JPanel(null);
 		error = new JLabel("Patient does not exist");
 		ok = new JButton("OK");
-		
-		
+
+
 		pane4.add(pan4);
 		pan4.add(error);
 		pan4.add(ok);
-		
+
 		error.setBounds(10, 10, 220, 40);
 		ok.setBounds(10, 100, 80, 40);
-		
-	
-		
+
+
+
 		ok.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent event)
 			{
 				fUpdate1.setVisible(true);
 				fError.setVisible(false);
-				
+
 			}
 		});
-		
+
 		pan4.setBounds(0,0,150,150);
 		fError.setResizable(false);
 		fError.setVisible(true);
-	
-}
+
+	}
 	public static void UploadMedicalReports()
 	{
 		// Create connection to database
 		try 
 		{ 
-		// "Load" the JDBC driver 
+			// "Load" the JDBC driver 
 			Class.forName("java.sql.Driver"); 
-		
-		 
-		// Establish the connection to the database 
+
+
+			// Establish the connection to the database 
 			String url = "jdbc:mysql://localhost:3306/cse"; 
 			conn = DriverManager.getConnection(url,"root","admin"); 
 			System.out.println("conected");
 		} 
- 
-		 
+
+
 		catch (Exception e) 
 		{ 
 			System.err.println("Got an exception!"); 
@@ -748,297 +719,274 @@ public class StaffK {
 
 
 		fUpload1 = new JFrame("Upload Medical Report");
-	fUpload1.setSize(330, 375);
-	pane1 = fUpload1.getContentPane();
-	pane1.setLayout(null);
-	//fUpload1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		fUpload1.setSize(330, 375);
+		pane1 = fUpload1.getContentPane();
+		pane1.setLayout(null);
+		//fUpload1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-	pan1 = new JPanel(null);
-	patID2 = new JLabel("Patient ID");
-	patDOB = new JLabel("DOB(ddmmyyyy)");
-	viewRecord = new JLabel("View patient");
-	submit = new JButton("Submit");
-	inputID = new JTextField();
-	inputName = new JTextField();
-	inputDOB = new JTextField();
+		pan1 = new JPanel(null);
+		patID2 = new JLabel("Patient ID");
+		patDOB = new JLabel("DOB(ddmmyyyy)");
+		viewRecord = new JLabel("View patient");
+		submit = new JButton("Submit");
+		inputID = new JTextField();
+		inputName = new JTextField();
+		inputDOB = new JTextField();
 
-	fName = new JTextField();
-	lName = new JTextField();
-	fLabel = new JLabel("First Name");
-	lLabel = new JLabel("Last Name");
+		fName = new JTextField();
+		lName = new JTextField();
+		fLabel = new JLabel("First Name");
+		lLabel = new JLabel("Last Name");
 
-	fc = new JFileChooser();
+		fc = new JFileChooser();
 
-	pane1.add(pan1);
-	pan1.add(fLabel);
-	pan1.add(lLabel);
-	pan1.add(fName);
-	pan1.add(lName);
-	pan1.add(patDOB);
-	pan1.add(patID2);
-	pan1.add(inputID);
-	pan1.add(inputDOB);
-	pan1.add(submit);
-
-
-	fLabel.setBounds(10, 10, 200, 40);
-	fName.setBounds(10, 45, 100, 30);
-	lLabel.setBounds(170, 10, 200, 40);
-	lName.setBounds(170, 45, 100, 30);
-	patDOB.setBounds(10, 105, 250, 40);
-	inputDOB.setBounds(10, 135, 100, 30);
-	patID2.setBounds(170, 105, 200, 40);
-	inputID.setBounds(170, 135, 100, 30);
-	submit.setBounds(10, 230, 80, 30);
-
-	//Upload reports
-	fUpload2 = new JFrame("Upload Medical Report");
-	fUpload2.setSize(330, 375);
-	pane2 = fUpload2.getContentPane();
-	pane2.setLayout(null);
-	fUpload2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		pane1.add(pan1);
+		pan1.add(fLabel);
+		pan1.add(lLabel);
+		pan1.add(fName);
+		pan1.add(lName);
+		pan1.add(patDOB);
+		pan1.add(patID2);
+		pan1.add(inputID);
+		pan1.add(inputDOB);
+		pan1.add(submit);
 
 
-	pan2 = new JPanel(null);
-	browse = new JLabel("Select Report to Upload");
-	reports = new JComboBox(upReports);
-	upload = new JButton("Browse");
-	search = new JButton("Search");
-	complete = new JLabel("");
-	curPat = new JLabel("");
+		fLabel.setBounds(10, 10, 200, 40);
+		fName.setBounds(10, 45, 100, 30);
+		lLabel.setBounds(170, 10, 200, 40);
+		lName.setBounds(170, 45, 100, 30);
+		patDOB.setBounds(10, 105, 250, 40);
+		inputDOB.setBounds(10, 135, 100, 30);
+		patID2.setBounds(170, 105, 200, 40);
+		inputID.setBounds(170, 135, 100, 30);
+		submit.setBounds(10, 230, 80, 30);
+
+		//Upload reports
+		fUpload2 = new JFrame("Upload Medical Report");
+		fUpload2.setSize(330, 375);
+		pane2 = fUpload2.getContentPane();
+		pane2.setLayout(null);
+		fUpload2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
-	pane2.add(pan2);
-	pan2.add(browse);
-	pan2.add(reports);
-	pan2.add(complete);
-	pan2.add(upload);
-	pan2.add(search);
-	pan2.add(curPat);
-
-	browse.setBounds(10, 40, 200, 40);
-	reports.setBounds(10, 75, 200, 40);
-	complete.setBounds(10,150,200,40 );
-	upload.setBounds(10, 230, 80, 30);
-	search.setBounds(200, 230, 80, 30);
-	curPat.setBounds(10,10,200,30);
+		pan2 = new JPanel(null);
+		browse = new JLabel("Select Report to Upload");
+		reports = new JComboBox(upReports);
+		upload = new JButton("Browse");
+		search = new JButton("Search");
+		complete = new JLabel("");
+		curPat = new JLabel("");
 
 
+		pane2.add(pan2);
+		pan2.add(browse);
+		pan2.add(reports);
+		pan2.add(complete);
+		pan2.add(upload);
+		pan2.add(search);
+		pan2.add(curPat);
 
-// create patients in database for testing
-try 
-{ 
-	statement = conn.createStatement(); 
-	rs = statement.executeQuery("SELECT * FROM patient"); 
- 	rs.next();		             
- 		
-		} 
-	catch (Exception e) 
-	{ 
-		System.err.println("Got an exception! ");  
-		System.err.println(e.getMessage());  
-	} 
+		browse.setBounds(10, 40, 200, 40);
+		reports.setBounds(10, 75, 200, 40);
+		complete.setBounds(10,150,200,40 );
+		upload.setBounds(10, 230, 80, 30);
+		search.setBounds(200, 230, 80, 30);
+		curPat.setBounds(10,10,200,30);
 
 
-
-submit.addActionListener(new ActionListener() 
-{
-	public void actionPerformed(ActionEvent event)
-	{
-		String fName1 = fName.getText();
-		String lName1 = lName.getText();
-		String patID = inputID.getText();
-		String patDOB = inputDOB.getText();
-		boolean found = true;
-		
-		
-		try 
-		{ 
-			statement = conn.createStatement(); 
-			rs = statement.executeQuery("SELECT * FROM patient");
-			//rs.next();
-		
-			while(rs.next())
+		submit.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent event)
 			{
-				if(rs.getString("fname").equalsIgnoreCase(fName1) && rs.getString("lname").equalsIgnoreCase(lName1) && Integer.toString(rs.getInt("idpatient")).equals(patID)&&rs.getString("dob").equals(patDOB))
-				{
-					fUpload2.setVisible(true);
-					fUpload1.setVisible(false);
-					found = true;
-					
-					
+				String fName1 = fName.getText();
+				String lName1 = lName.getText();
+				String patID = inputID.getText();
+				String patDOB = inputDOB.getText();
+				boolean found = true;
+
+
+				try 
+				{ 
+					statement = conn.createStatement(); 
+					rs = statement.executeQuery("SELECT * FROM patient");
+
+					while(rs.next())
+					{
+						if(rs.getString("fname").equalsIgnoreCase(fName1) && rs.getString("lname").equalsIgnoreCase(lName1) && Integer.toString(rs.getInt("idpatient")).equals(patID)&&rs.getString("dob").equals(patDOB))
+						{
+							fUpload2.setVisible(true);
+							fUpload1.setVisible(false);
+							found = true;
+
+
+						}
+						else
+						{
+							found = false;
+						}
+					}
+
+					if(found == false)
+					{
+						while(rs.previous())
+						{
+							if(rs.getString("fname").equalsIgnoreCase(fName1) && rs.getString("lname").equalsIgnoreCase(lName1) && Integer.toString(rs.getInt("idpatient")).equals(patID)&&rs.getString("dob").equals(patDOB))
+							{
+								fUpload2.setVisible(true);
+								fUpload1.setVisible(false);
+								found = true;
+
+							}
+							else
+							{
+								found = false;
+								//error();
+							}
+						}
+
+						if (found == false)
+						{
+							error2();
+						}
+					}
+					rs.close();
 				}
-				else
-				{
-					found = false;
-					//error();
-				}
+				catch (Exception e) 
+				{ 
+					System.err.println("Got an exception! ");  
+					System.err.println(e.getMessage());  
+				} 
+				curPat.setText("Patient: " + fName1 + " " + lName1);
 			}
-			
-			if(found == false)
+		});
+
+
+		search.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent event)
 			{
-			while(rs.previous())
-			{
-				if(rs.getString("fname").equalsIgnoreCase(fName1) && rs.getString("lname").equalsIgnoreCase(lName1) && Integer.toString(rs.getInt("idpatient")).equals(patID)&&rs.getString("dob").equals(patDOB))
-				{
-					fUpload2.setVisible(true);
-					fUpload1.setVisible(false);
-					found = true;
-					
-				}
-				else
-				{
-					found = false;
-					//error();
-				}
+				complete.setText("");
+				fUpload1.setVisible(true);
+				fUpload2.setVisible(false);
+
 			}
-			
-			if (found == false)
+		});
+
+
+		//Browse button
+		upload.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent event)
 			{
-				error2();
-			}
-		}
-	}
-		catch (Exception e) 
-		{ 
-			System.err.println("Got an exception! ");  
-			System.err.println(e.getMessage());  
-		} 
-		curPat.setText("Patient: " + fName1 + " " + lName1);
-	}
-});
+				String addReport = "";
 
+				int returnVal = fc.showOpenDialog(null);
 
-search.addActionListener(new ActionListener() 
-{
-	public void actionPerformed(ActionEvent event)
-	{
-		complete.setText("");
-		fUpload1.setVisible(true);
-		fUpload2.setVisible(false);
-		
-	}
-});
-
-
-//Browse button
-upload.addActionListener(new ActionListener() 
-{
-	public void actionPerformed(ActionEvent event)
-	{
-		String addReport = "";
-
-			int returnVal = fc.showOpenDialog(null);
-			
 				if (returnVal == JFileChooser.CANCEL_OPTION)
 				{
 					complete.setText("Canceled");
 				}
 
-		if (returnVal == JFileChooser.APPROVE_OPTION)
-		{
-			File file = fc.getSelectedFile();
-
-			String line;
-			//make a string to concat the input line
-			
-			String filename = fc.getCurrentDirectory().toString() + "/" + file.getName();
-
-			try
-			{
-				FileReader fr = new FileReader (filename);
-				BufferedReader inFile = new BufferedReader (fr);
-
-				line = inFile.readLine();
-				while (line != null)
+				if (returnVal == JFileChooser.APPROVE_OPTION)
 				{
+					File file = fc.getSelectedFile();
+
+					String line;
 					
-					addReport = addReport + line + "\n";
-					line = inFile.readLine();
+					//make a string to concat the input line
+
+					String filename = fc.getCurrentDirectory().toString() + "/" + file.getName();
+
+					try
+					{
+						FileReader fr = new FileReader (filename);
+						BufferedReader inFile = new BufferedReader (fr);
+
+						line = inFile.readLine();
+						while (line != null)
+						{
+
+							addReport = addReport + line + "\n";
+							line = inFile.readLine();
+						}
+						inFile.close();
+					}
+					catch (FileNotFoundException exception)
+					{
+
+						complete.setText("The file could not be opened.");
+					}
+					catch (IOException exception)
+					{
+
+						complete.setText("Sorry, an error occured");
+					}
+					try 
+					{ 
+						//Current patient
+						String patID = inputID.getText();
+
+						statement = conn.createStatement(); 
+						statement.executeUpdate("UPDATE patient SET " + "`medHistory`='" + addReport + "' WHERE `idpatient`='" + (Integer.parseInt(patID)) + "';");
+						
+						complete.setText("Upload Complete");
+					}
+					catch (Exception e) 
+					{ 
+						System.err.println("Got an exception! ");  
+						System.err.println(e.getMessage());  
+					}
 				}
-				inFile.close();
+
+
 			}
-			catch (FileNotFoundException exception)
-			{
-				
-				complete.setText("The file could not be opened.");
-			}
-			catch (IOException exception)
-			{
-				
-				complete.setText("Sorry, an error occured");
-			}
-			try 
-			{ 
-				/*
-				statement = conn.createStatement(); 
-				rs = statement.executeQuery("SELECT * FROM patient"); 
-				rs.next();*/
-			
-				//Current patient
-				String patID = inputID.getText();
-				
-				statement = conn.createStatement(); 
-				statement.executeUpdate("UPDATE patient SET " + "`medHistory`='" + addReport + "' WHERE `idpatient`='" + (Integer.parseInt(patID)) + "';");
-				complete.setText("Upload Complete");
-			
-			
-			}
-			catch (Exception e) 
-			{ 
-				System.err.println("Got an exception! ");  
-				System.err.println(e.getMessage());  
-			}
-		}
-
-		
-}
-});
+		});
 
 
-	pan1.setBounds(0, 0, 320, 335);
-	pan2.setBounds(0, 0, 320, 335);
-	fUpload1.setResizable(false);
-	fUpload1.setVisible(true);
-}
-
-
-public static void error2()
-{
-	fError = new JFrame("Error");
-	fError.setSize(250, 250);
-	pane3 = fError.getContentPane();
-	pane3.setLayout(null);
-	fError.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-	pan3 = new JPanel(null);
-	error = new JLabel("Patient does not exist");
-	ok = new JButton("OK");
-
-
-	pane3.add(pan3);
-	pan3.add(error);
-	pan3.add(ok);
-
-	error.setBounds(10, 10, 220, 40);
-	ok.setBounds(10, 100, 80, 40);
-
-
-
-	ok.addActionListener(new ActionListener() 
-{
-	public void actionPerformed(ActionEvent event)
-	{
+		pan1.setBounds(0, 0, 320, 335);
+		pan2.setBounds(0, 0, 320, 335);
+		fUpload1.setResizable(false);
 		fUpload1.setVisible(true);
-		fError.setVisible(false);
-		
 	}
-});
 
-	pan3.setBounds(0,0,150,150);
-	fError.setResizable(false);
-	fError.setVisible(true);
-}
+
+	public static void error2()
+	{
+		fError = new JFrame("Error");
+		fError.setSize(250, 250);
+		pane3 = fError.getContentPane();
+		pane3.setLayout(null);
+		fError.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		pan3 = new JPanel(null);
+		error = new JLabel("Patient does not exist");
+		ok = new JButton("OK");
+
+
+		pane3.add(pan3);
+		pan3.add(error);
+		pan3.add(ok);
+
+		error.setBounds(10, 10, 220, 40);
+		ok.setBounds(10, 100, 80, 40);
+
+
+
+		ok.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent event)
+			{
+				fUpload1.setVisible(true);
+				fError.setVisible(false);
+
+			}
+		});
+
+		pan3.setBounds(0,0,150,150);
+		fError.setResizable(false);
+		fError.setVisible(true);
+	}
 	public static void FinalizeAppointment()
 	{
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
@@ -1053,14 +1001,14 @@ public static void error2()
 		pane = fmain.getContentPane();
 		pane.setLayout(null);										//Apply null layout
 		//fmain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 		//Close when X is clicked
-		
+
 		//pane.setLayout(new GridLayout(4,2,20,50)); 
 		try {
 			statement = conn.createStatement();
 			ResultSet rs = statement.executeQuery("SELECT * FROM Appointments");
-			
+
 			doctorsVector = new Vector();
-			
+
 			while(rs.next())
 			{
 				if(!doctorsVector.contains(rs.getString("docName")))
@@ -1068,253 +1016,252 @@ public static void error2()
 					doctorsVector.add(rs.getString("docName"));
 				}
 				System.out.println(doctorsVector.lastElement());
-				
+
+				rs.close();
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		final JList doctorBox = new JList(doctorsVector);
-	
+
 		enter = new JButton("Enter");
 		JButton back = new JButton("Back");
-				
-	    doctorBox.setBounds(85,80, 150, 100);
-	    enter.setBounds(10,285, 150, 65);
-	    back.setBounds(170,285,150,65);
-	    
-	    fmain.add(doctorBox);
+
+		doctorBox.setBounds(85,80, 150, 100);
+		enter.setBounds(10,285, 150, 65);
+		back.setBounds(170,285,150,65);
+
+		fmain.add(doctorBox);
 		fmain.add(enter);
 		fmain.add(back);
-		
+
 		fmain.setResizable(false);
 		fmain.setVisible(true);
-		
+
 		back.addActionListener(new ActionListener() {
-	          public void actionPerformed(ActionEvent event) 
-	           {	
-	        	  	main.setVisible(true);	
- 					fmain.setVisible(false);
-	           }
+			public void actionPerformed(ActionEvent event) 
+			{	
+				main.setVisible(true);	
+				fmain.setVisible(false);
+			}
 		});
-		
+
 		enter.addActionListener(new ActionListener() {
-	           public void actionPerformed(ActionEvent event) 
-	           {
-	        	   docSelected = (String) doctorBox.getSelectedValue();
-	        	   
-	        	   	docFrame = new JFrame (docSelected); 			//Create and name frame
-	        	   	docFrame.setSize(330, 375); 					//Set size to 400x400 pixels
-	       			pane = docFrame.getContentPane();
-	       			pane.setLayout(null);							//Apply null layout
-	       				   
-	       			System.out.println("what");
-	       			patientVector = new Vector();
-	       			
-	       			try {
-	       				statement = conn.createStatement();
-	       				ResultSet rs = statement.executeQuery("SELECT * FROM Appointments WHERE `docName`='" + docSelected + "';");
-	       				
-	       				while(rs.next())
-	       				{
-	       					if(rs.getString("status").equals("pending"))
-	       						patientVector.add(Integer.toString(rs.getInt(1)));
-	       					System.out.println(patientVector.lastElement());
-	       					
-	       				}
-	       			} catch (SQLException e) {
-	       				// TODO Auto-generated catch block
-	       				e.printStackTrace();
-	       			}
-	       			
-					final JList patientBox = new JList(patientVector);
-					
-					JButton pEnter = new JButton("Enter");
-					JButton back = new JButton("Back");
-							
-				    patientBox.setBounds(85,80, 150, 100);
-				    pEnter.setBounds(10,285, 150, 65);
-				    back.setBounds(170,285,150,65);
-				    
-				    docFrame.add(patientBox);
-					docFrame.add(pEnter);
-					docFrame.add(back);
-					
-					docFrame.setResizable(false);
-					docFrame.setVisible(true);
-				
-					back.addActionListener(new ActionListener() {
-				          public void actionPerformed(ActionEvent event) 
-				           {	
-				        	  	fmain.setVisible(true);	
-		       					docFrame.setVisible(false);
-				           }
-					});
-					
-					pEnter.addActionListener(new ActionListener() {
-				          public void actionPerformed(ActionEvent event) 
-				           {	
-				        	  	
-				  				pSelected = (String) patientBox.getSelectedValue();
-				  				
-				        	  	pFrame = new JFrame (pSelected); 			//Create and name frame
-				        	   	pFrame.setSize(330, 375); 					//Set size to 400x400 pixels
-				       			pane = pFrame.getContentPane();
-				       			pane.setLayout(null);							//Apply null layout
-				       			pane.setLayout(new GridLayout(5,2,20,50));
-				       			String time1="";
-				       			String day1="";
-				       			String month1="";
-				       			String year1="";
-				       			
-				       			try {
-				       				statement = conn.createStatement();
-				       				ResultSet rs = statement.executeQuery("SELECT time FROM Appointments WHERE `appointmentsId`='" + pSelected + "';");
-				       				
-				       				time = new Vector();
-				       				
-				       				while(rs.next())
-				       				{
-				       					time.add(rs.getString(1));
-				       					System.out.println(time.lastElement());
-				       					time1 = rs.getString(1);
-				       					
-				       				}
-				       			} catch (SQLException e) {
-				       				// TODO Auto-generated catch block
-				       				e.printStackTrace();
-				       			}
-				       			try {
-				       				statement = conn.createStatement();
-				       				ResultSet rs = statement.executeQuery("SELECT month FROM Appointments WHERE `appointmentsId`='" + pSelected + "';");
-				       				
-				       				month = new Vector();
-				       				
-				       				while(rs.next())
-				       				{
-				       					month.add(rs.getString(1));
-				       					System.out.println(month.lastElement());
-				       					month1 = rs.getString(1);
-				       				}
-				       			} catch (SQLException e) {
-				       				// TODO Auto-generated catch block
-				       				e.printStackTrace();
-				       			}try {
-				       				statement = conn.createStatement();
-				       				ResultSet rs = statement.executeQuery("SELECT day FROM Appointments WHERE `appointmentsId`='" + pSelected + "';");
-				       				
-				       				day = new Vector();
-				       				
-				       				while(rs.next())
-				       				{
-				       					day.add(rs.getString(1));
-				       					System.out.println(day.lastElement());
-				       					day1 = rs.getString(1);
-				       				}
-				       			} catch (SQLException e) {
-				       				// TODO Auto-generated catch block
-				       				e.printStackTrace();
-				       			}try {
-				       				statement = conn.createStatement();
-				       				ResultSet rs = statement.executeQuery("SELECT year FROM Appointments WHERE `appointmentsId`='" + pSelected + "';");
-				       				
-				       				year = new Vector();
-				       				
-				       				while(rs.next())
-				       				{
-				       					year.add(rs.getString(1));
-				       					System.out.println(year.lastElement());   	
-				       					year1 = rs.getString(1);
-				       				}
-				       				
-				       			} catch (SQLException e) {
-				       				// TODO Auto-generated catch block
-				       				e.printStackTrace();
-				       			}
-				       			
-				        	  	JLabel pTime = new JLabel(time1);
-				        	  	JLabel pMonth = new JLabel(month1);
-				       	  		JLabel pDay = new JLabel(day1);
-				       			JLabel pYear= new JLabel(year1);
-				        	  			
-				       			JLabel appTime = new JLabel("   Appointment Time: ");
-				       			JLabel appMonth = new JLabel("   Month: ");
-				       			JLabel appDay = new JLabel("   Day: ");
-				       			JLabel appYear = new JLabel("   Year: ");
-				       			JButton confirm = new JButton("Confirm");
-				       			JButton cancel = new JButton("Deny");
-	       		
-				       			pFrame.add(appTime);
-				       			pFrame.add(pTime);
-				       			//pFrame.add(pTime);
-				       			pFrame.add(appMonth);
-				       			pFrame.add(pMonth);
-				       			//pFrame.add(pMonth);
-				       			pFrame.add(appDay);
-				       			pFrame.add(pDay);
-				       			//pFrame.add(pDay);
-				       			pFrame.add(appYear);
-				       			pFrame.add(pYear);
-				       			//pFrame.add(pYear);
-				       			pFrame.add(confirm);
-				       			pFrame.add(cancel);
-	       			
-				       			pFrame.setResizable(false);
-				       			pFrame.setVisible(true);
-	       			
-				       			confirm.addActionListener(new ActionListener() {
-				       				public void actionPerformed(ActionEvent event) 
-				       				{
-				       					try
-			       			        	{
-				       						Statement stmt = conn.createStatement();
-				       					    String sql = "UPDATE `cse`.`appointments` SET `status`='approved' WHERE `appointmentsID`='" + pSelected + "';";
-				       					    stmt.executeUpdate(sql);
-				       					    patientVector.remove(pSelected);
-				       					    patientBox.updateUI();
-				       					    
-					       			        docFrame.setVisible(true);
-					       			        pFrame.setVisible(false);
-				       					    
-				       					}
-				       					catch(Exception e){
-				       						e.printStackTrace();
-				       					}
-				       				}
-				       			});
-				       			cancel.addActionListener(new ActionListener() {
-				       				public void actionPerformed(ActionEvent event)
-				       				{
-				       					int reply = JOptionPane.showConfirmDialog(pFrame, "Are you sure?", "Confirm cancellation", JOptionPane.YES_NO_OPTION);
-				       			        if (reply == JOptionPane.YES_OPTION) {
-				       			        	try
-				       			        	{
-					       						Statement stmt = conn.createStatement();
-					       					    String sql = "UPDATE `cse`.`appointments` SET `status`='denied' WHERE `appointmentsID`='" + pSelected + "';";
-					       					    stmt.executeUpdate(sql);
-					       					    patientVector.remove(pSelected);
-					       					    patientBox.updateUI();
-					       					    
-					       					    fmain.setVisible(true);	
-						       			        docFrame.setVisible(false);
-						       			        pFrame.setVisible(false);
-					       					    
-					       					}
-					       					catch(Exception e){
-					       						e.printStackTrace();
-					       					}
-				       					
-				       					}
-				       					
-				       				}	
-				       			});
-				   
-				           }
-					});
-	           }
-	           
-	           });
+			public void actionPerformed(ActionEvent event) 
+			{
+				docSelected = (String) doctorBox.getSelectedValue();
+
+				docFrame = new JFrame (docSelected); 			//Create and name frame
+				docFrame.setSize(330, 375); 					//Set size to 400x400 pixels
+				pane = docFrame.getContentPane();
+				pane.setLayout(null);							//Apply null layout
+
+				System.out.println("what");
+				patientVector = new Vector();
+
+				try {
+					statement = conn.createStatement();
+					ResultSet rs = statement.executeQuery("SELECT * FROM Appointments WHERE `docName`='" + docSelected + "';");
+
+					while(rs.next())
+					{
+						if(rs.getString("status").equals("pending"))
+							patientVector.add(Integer.toString(rs.getInt(1)));
+						System.out.println(patientVector.lastElement());
+
+					}
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+				final JList patientBox = new JList(patientVector);
+
+				JButton pEnter = new JButton("Enter");
+				JButton back = new JButton("Back");
+
+				patientBox.setBounds(85,80, 150, 100);
+				pEnter.setBounds(10,285, 150, 65);
+				back.setBounds(170,285,150,65);
+
+				docFrame.add(patientBox);
+				docFrame.add(pEnter);
+				docFrame.add(back);
+
+				docFrame.setResizable(false);
+				docFrame.setVisible(true);
+
+				back.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent event) 
+					{	
+						fmain.setVisible(true);	
+						docFrame.setVisible(false);
+					}
+				});
+
+				pEnter.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent event) 
+					{	
+
+						pSelected = (String) patientBox.getSelectedValue();
+
+						pFrame = new JFrame (pSelected); 			//Create and name frame
+						pFrame.setSize(330, 375); 					//Set size to 400x400 pixels
+						pane = pFrame.getContentPane();
+						pane.setLayout(null);							//Apply null layout
+						pane.setLayout(new GridLayout(5,2,20,50));
+						String time1="";
+						String day1="";
+						String month1="";
+						String year1="";
+
+						try {
+							statement = conn.createStatement();
+							ResultSet rs = statement.executeQuery("SELECT time FROM Appointments WHERE `appointmentsId`='" + pSelected + "';");
+
+							time = new Vector();
+
+							while(rs.next())
+							{
+								time.add(rs.getString(1));
+								System.out.println(time.lastElement());
+								time1 = rs.getString(1);
+
+							}
+							rs.close();
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+						try {
+							statement = conn.createStatement();
+							ResultSet rs = statement.executeQuery("SELECT month FROM Appointments WHERE `appointmentsId`='" + pSelected + "';");
+
+							month = new Vector();
+
+							while(rs.next())
+							{
+								month.add(rs.getString(1));
+								System.out.println(month.lastElement());
+								month1 = rs.getString(1);
+							}
+							rs.close();
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}try {
+							statement = conn.createStatement();
+							ResultSet rs = statement.executeQuery("SELECT day FROM Appointments WHERE `appointmentsId`='" + pSelected + "';");
+
+							day = new Vector();
+
+							while(rs.next())
+							{
+								day.add(rs.getString(1));
+								System.out.println(day.lastElement());
+								day1 = rs.getString(1);
+							}
+							rs.close();
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}try {
+							statement = conn.createStatement();
+							ResultSet rs = statement.executeQuery("SELECT year FROM Appointments WHERE `appointmentsId`='" + pSelected + "';");
+
+							year = new Vector();
+
+							while(rs.next())
+							{
+								year.add(rs.getString(1));
+								System.out.println(year.lastElement());   	
+								year1 = rs.getString(1);
+							}
+							rs.close();
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+
+						JLabel pTime = new JLabel(time1);
+						JLabel pMonth = new JLabel(month1);
+						JLabel pDay = new JLabel(day1);
+						JLabel pYear= new JLabel(year1);
+
+						JLabel appTime = new JLabel("   Appointment Time: ");
+						JLabel appMonth = new JLabel("   Month: ");
+						JLabel appDay = new JLabel("   Day: ");
+						JLabel appYear = new JLabel("   Year: ");
+						JButton confirm = new JButton("Confirm");
+						JButton cancel = new JButton("Deny");
+
+						pFrame.add(appTime);
+						pFrame.add(pTime);
+						//pFrame.add(pTime);
+						pFrame.add(appMonth);
+						pFrame.add(pMonth);
+						//pFrame.add(pMonth);
+						pFrame.add(appDay);
+						pFrame.add(pDay);
+						//pFrame.add(pDay);
+						pFrame.add(appYear);
+						pFrame.add(pYear);
+						//pFrame.add(pYear);
+						pFrame.add(confirm);
+						pFrame.add(cancel);
+
+						pFrame.setResizable(false);
+						pFrame.setVisible(true);
+
+						confirm.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent event) 
+							{
+								try
+								{
+									Statement stmt = conn.createStatement();
+									String sql = "UPDATE `cse`.`appointments` SET `status`='approved' WHERE `appointmentsID`='" + pSelected + "';";
+									stmt.executeUpdate(sql);
+									patientVector.remove(pSelected);
+									patientBox.updateUI();
+
+									docFrame.setVisible(true);
+									pFrame.setVisible(false);
+
+								}
+								catch(Exception e){
+									e.printStackTrace();
+								}
+							}
+						});
+						cancel.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent event)
+							{
+								int reply = JOptionPane.showConfirmDialog(pFrame, "Are you sure?", "Confirm cancellation", JOptionPane.YES_NO_OPTION);
+								if (reply == JOptionPane.YES_OPTION) {
+									try
+									{
+										Statement stmt = conn.createStatement();
+										String sql = "UPDATE `cse`.`appointments` SET `status`='denied' WHERE `appointmentsID`='" + pSelected + "';";
+										stmt.executeUpdate(sql);
+										patientVector.remove(pSelected);
+										patientBox.updateUI();
+
+										fmain.setVisible(true);	
+										docFrame.setVisible(false);
+										pFrame.setVisible(false);
+
+									}
+									catch(Exception e){
+										e.printStackTrace();
+									}
+
+								}
+
+							}	
+						});
+
+					}
+				});
+			}
+
+		});
 
 	}
 }
