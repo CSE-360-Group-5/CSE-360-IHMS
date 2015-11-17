@@ -26,9 +26,9 @@ public class StaffK {
 	static JButton fappoin, upload, update, epresc;
 	static JPanel staff;
 	static JFrame main;
-	static ArrayList<Prescription> presc=new ArrayList<Prescription>();
-	static ArrayList<String> pat = new ArrayList();
-	static Vector<String> doctorsVector, patientVector, time, month, day, year;
+	static ArrayList presc=new ArrayList();
+	static ArrayList pat = new ArrayList();
+	static Vector doctorsVector, patientVector, time, month, day, year;
 	
 	static JLabel entInfo, report2, error, fLabel, lLabel, idLabel;
 	static JButton search, revise, delete, submit, cancel, newSearch, ok;
@@ -77,9 +77,9 @@ public class StaffK {
 
 	      // Step 2: Establish the connection to the database 
 
-	      String url = "jdbc:mysql://localhost:3306/healthcare"; 
+	      String url = "jdbc:mysql://localhost:3306/cse"; 
 
-	      conn = DriverManager.getConnection(url,"root","gillie31");  
+	      conn = DriverManager.getConnection(url,"root","admin");  
 
 	      System.out.println("connected");
 
@@ -99,7 +99,7 @@ public class StaffK {
 		pat.add("Test2");
 		pat.add("Test3");
 		try{
-			Statement sta= conn.createStatement();
+			Statement sta = conn.createStatement();
 			ResultSet rs = sta.executeQuery("SELECT * FROM Prescription");
 			while(rs.next()){
 				presc.add(new Prescription(rs.getString("Drug"),rs.getString("Patient"),rs.getString("Doctor"),rs.getString("Directions"),rs.getInt("Amount"),rs.getInt("Date"),rs.getInt("Month"),rs.getInt("Year"),rs.getString("Report"),rs.getInt("PatID"),rs.getInt("PatDOB")));
@@ -138,7 +138,7 @@ public class StaffK {
 		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Close when X is clicked
 		fappoin=new JButton("Finalize Appointment");
 		upload=new JButton("Upload Medical Records");
-		update=new JButton("Update Medical Records");
+		update=new JButton("View/Update Medical Records");
 		epresc=new JButton("Access E-Prescriptions");
 		staff=new JPanel();
 		staff.setSize(400,400);
@@ -175,16 +175,16 @@ public class StaffK {
 	        	epres(presc);
 	        }
 	    });
-		fappoin.setAlignmentX(staff.CENTER_ALIGNMENT);
-		upload.setAlignmentX(staff.CENTER_ALIGNMENT);
-		update.setAlignmentX(staff.CENTER_ALIGNMENT);
-		epresc.setAlignmentX(staff.CENTER_ALIGNMENT);
+		fappoin.setAlignmentX(Component.CENTER_ALIGNMENT);
+		upload.setAlignmentX(Component.CENTER_ALIGNMENT);
+		update.setAlignmentX(Component.CENTER_ALIGNMENT);
+		epresc.setAlignmentX(Component.CENTER_ALIGNMENT);
 		pane.add(staff);
 		main.setResizable(false);
 		main.setVisible(true);
 	}
-	public static void epres( ArrayList<Prescription> p){
-		final ArrayList<Prescription> temp=new ArrayList();
+	public static void epres( ArrayList p){
+		final ArrayList temp=new ArrayList();
 		final JFrame frame=new JFrame("E-Prescriptions");
 		Container pane;
 		JPanel panep = new JPanel(null);
@@ -205,33 +205,33 @@ public class StaffK {
 		panep.add(Box.createVerticalStrut(300));
 		patients.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-				String name= pat.get(patients.getSelectedIndex());
+				String name= (String) pat.get(patients.getSelectedIndex());
 				int index=patients.getSelectedIndex();
 				temp.clear();
 				for(int i=0; i<presc.size();i++){
-					if(presc.get(i).getPat().equals(name)){
+					if(((Prescription) presc.get(i)).getPat().equals(name)){
 						temp.add(presc.get(i));
 					}
 				}
 				for(int i=0;i<temp.size();i++){
 					Prescription ta;
 					for(int j=i-1;j>=0;j--){
-						if(temp.get(i).getYear()<temp.get(j).getYear()){
-							ta=temp.get(j);
+						if(((Prescription) temp.get(i)).getYear()<((Prescription) temp.get(j)).getYear()){
+							ta=(Prescription) temp.get(j);
 							temp.set(j, temp.get(i));
 							temp.set(i, ta);
 						}
-						else if(temp.get(i).getYear()<temp.get(j).getYear()){
-							if(temp.get(i).getMonth()<temp.get(j).getMonth()){
-								ta=temp.get(j);
+						else if(((Prescription) temp.get(i)).getYear()<((Prescription) temp.get(j)).getYear()){
+							if(((Prescription) temp.get(i)).getMonth()<((Prescription) temp.get(j)).getMonth()){
+								ta=(Prescription) temp.get(j);
 								temp.set(j, temp.get(i));
 								temp.set(i, ta);
 							}
 						}
-						else if(temp.get(i).getYear()<temp.get(j).getYear()){
-							if(temp.get(i).getMonth()<temp.get(j).getMonth()){
-								if(temp.get(i).getDate()<temp.get(j).getDate()){
-									ta=temp.get(j);
+						else if(((Prescription) temp.get(i)).getYear()<((Prescription) temp.get(j)).getYear()){
+							if(((Prescription) temp.get(i)).getMonth()<((Prescription) temp.get(j)).getMonth()){
+								if(((Prescription) temp.get(i)).getDate()<((Prescription) temp.get(j)).getDate()){
+									ta=(Prescription) temp.get(j);
 									temp.set(j, temp.get(i));
 									temp.set(i, ta);
 								}
@@ -244,12 +244,12 @@ public class StaffK {
 				epresl(temp,0,index);
 			}
 		});
-		patients.setAlignmentX(panep.CENTER_ALIGNMENT);
+		patients.setAlignmentX(Component.CENTER_ALIGNMENT);
 		pane.add(panep);
 		frame.setResizable(false);
 		frame.setVisible(true);
 	}
-	static void epresl(final ArrayList<Prescription> p, int start,int index){
+	static void epresl(final ArrayList p, int start,int index){
 		final JFrame frame=new JFrame("E-Prescriptions");
 		final int s=start;
 		Container pane;
@@ -261,8 +261,8 @@ public class StaffK {
 		JLabel [] pt=new JLabel[p.size()],pi=new JLabel[p.size()];
 		
 		for(int i=0;i<p.size();i++){
-			pt[i]=new JLabel("Drug: "+p.get(i).getDrug()+",  Doctor: "+p.get(i).getDoc());
-			pi[i]=new JLabel("\tDirections: "+p.get(i).getDir()+",  Date: "+Integer.toString(p.get(i).getMonth())+"/"+Integer.toString(p.get(i).getDate())+"/"+Integer.toString(p.get(i).getYear()));
+			pt[i]=new JLabel("Drug: "+((Prescription) p.get(i)).getDrug()+",  Doctor: "+((Prescription) p.get(i)).getDoc());
+			pi[i]=new JLabel("\tDirections: "+((Prescription) p.get(i)).getDir()+",  Date: "+Integer.toString(((Prescription) p.get(i)).getMonth())+"/"+Integer.toString(((Prescription) p.get(i)).getDate())+"/"+Integer.toString(((Prescription) p.get(i)).getYear()));
 		}
 		final JComboBox patients=new JComboBox(pat.toArray());
 		patients.setSelectedIndex(index);
@@ -301,33 +301,33 @@ public class StaffK {
 	    });
 		patients.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-				String name= pat.get(patients.getSelectedIndex());
+				String name= (String) pat.get(patients.getSelectedIndex());
 				int ind=patients.getSelectedIndex();
 				p.clear();
 				for(int i=0; i<presc.size();i++){
-					if(presc.get(i).getPat().equals(name)){
+					if(((Prescription) presc.get(i)).getPat().equals(name)){
 						p.add(presc.get(i));
 					}
 				}
 				for(int i=0;i<p.size();i++){
 					Prescription t;
 					for(int j=i-1;j>=0;j--){
-						if(p.get(i).getYear()<p.get(j).getYear()){
-							t=p.get(j);
+						if(((Prescription) p.get(i)).getYear()<((Prescription) p.get(j)).getYear()){
+							t=(Prescription) p.get(j);
 							p.set(j, p.get(i));
 							p.set(i, t);
 						}
-						else if(p.get(i).getYear()<p.get(j).getYear()){
-							if(p.get(i).getMonth()<p.get(j).getMonth()){
-								t=p.get(j);
+						else if(((Prescription) p.get(i)).getYear()<((Prescription) p.get(j)).getYear()){
+							if(((Prescription) p.get(i)).getMonth()<((Prescription) p.get(j)).getMonth()){
+								t=(Prescription) p.get(j);
 								p.set(j, p.get(i));
 								p.set(i, t);
 							}
 						}
-						else if(p.get(i).getYear()<p.get(j).getYear()){
-							if(p.get(i).getMonth()<p.get(j).getMonth()){
-								if(p.get(i).getDate()<p.get(j).getDate()){
-									t=p.get(j);
+						else if(((Prescription) p.get(i)).getYear()<((Prescription) p.get(j)).getYear()){
+							if(((Prescription) p.get(i)).getMonth()<((Prescription) p.get(j)).getMonth()){
+								if(((Prescription) p.get(i)).getDate()<((Prescription) p.get(j)).getDate()){
+									t=(Prescription) p.get(j);
 									p.set(j, p.get(i));
 									p.set(i, t);
 								}
@@ -342,14 +342,10 @@ public class StaffK {
 		});
 		pane.add(panep);
 		pane.add(panep2);
-		panep.setAlignmentY(pane.LEFT_ALIGNMENT);
+		panep.setAlignmentY(Component.LEFT_ALIGNMENT);
 		frame.setResizable(false);
 		frame.setVisible(true);
 		
-		
-		{
-			
-		}
 	}
 	
 	public static void UpdateMedicalReports()
@@ -362,8 +358,8 @@ public class StaffK {
 		
 		 
 		// Establish the connection to the database 
-			String url = "jdbc:mysql://localhost:3306/healthcare"; 
-			conn = DriverManager.getConnection(url,"root","gillie31"); 
+			String url = "jdbc:mysql://localhost:3306/cse"; 
+			conn = DriverManager.getConnection(url,"root","admin"); 
 			System.out.println("conected");
 		} 
  
@@ -376,6 +372,7 @@ public class StaffK {
 		
 		
 		// create patient in database for testing
+		/*
 		try 
 		{ 
 			statement = conn.createStatement(); 
@@ -386,16 +383,17 @@ public class StaffK {
 				//statement.executeUpdate("INSERT INTO patient (idpatient, fname, lname, dob, email, password, sex, medHistory, mstatus, education, race)" + "VALUES ('" + 1 + "', '" + "Joshua" + "', '" + "Liddell" + "', '" + "27021985" + "', '" + "email" + "', '" + "password" + "', '" + "male" + "', '" + "medical report" + "', '" + "mstatus" + "', '" + "elvl" + "', '" + "prace" + "')"); 
 		 
 			
-				} 
-			catch (Exception e) 
-			{ 
-				System.err.println("Got an exception! ");  
-				System.err.println(e.getMessage());  
-			} 
+		} 
+		catch (Exception e) 
+		{ 
+			System.err.println("Got an exception! ");  
+			System.err.println(e.getMessage());  
+		}
+		*/
 
 		
 		// Search for patient
-		fUpdate1 = new JFrame("Update Medical Report");
+		fUpdate1 = new JFrame("View/Update Medical Record");
 		fUpdate1.setSize(330, 375);
 		pane = fUpdate1.getContentPane();
 		pane.setLayout(null);
@@ -406,9 +404,9 @@ public class StaffK {
 		lLabel = new JLabel("Last Name");
 		search = new JButton("Search");
 		idLabel = new JLabel("Patient ID");
-		fName = new JTextField();
-		lName = new JTextField();
-		patID = new JTextField();
+		fName = new JTextField(10);
+		lName = new JTextField(10);
+		patID = new JTextField(10);
 		
 		pane.add(pan1);		
 		pan1.add(fLabel);
@@ -430,7 +428,7 @@ public class StaffK {
 		
 		
 		//Update reports
-		fUpdate2 = new JFrame("Update Medical Report");
+		fUpdate2 = new JFrame("View Medical Record");
 		fUpdate2.setSize(330, 375);
 		pane2 = fUpdate2.getContentPane();
 		pane2.setLayout(null);
@@ -438,11 +436,9 @@ public class StaffK {
 		
 	
 		pan2 = new JPanel(null);
-		revise = new JButton("Revise");
+		revise = new JButton("Update");
 		delete = new JButton("delete");
 		newSearch = new JButton("Search");
-		
-		
 		
 		
 		//insert the medical report
@@ -481,7 +477,7 @@ public class StaffK {
 		
 		
 		//add panel for revise 
-		fRevise = new JFrame("Update Medical Report");
+		fRevise = new JFrame("Update Medical Record");
 		fRevise.setSize(330, 375);
 		pane3 = fRevise.getContentPane();
 		pane3.setLayout(null);
@@ -511,7 +507,7 @@ public class StaffK {
 				String fName1 = fName.getText();
 				String lName1 = lName.getText();
 				String patID1 = patID.getText();
-				Boolean found = true;
+				boolean found = true;
 
 				
 				try 
@@ -738,8 +734,8 @@ public class StaffK {
 		
 		 
 		// Establish the connection to the database 
-			String url = "jdbc:mysql://localhost:3306/healthcare"; 
-			conn = DriverManager.getConnection(url,"root","gillie31"); 
+			String url = "jdbc:mysql://localhost:3306/cse"; 
+			conn = DriverManager.getConnection(url,"root","admin"); 
 			System.out.println("conected");
 		} 
  
@@ -835,13 +831,7 @@ try
 	statement = conn.createStatement(); 
 	rs = statement.executeQuery("SELECT * FROM patient"); 
  	rs.next();		             
-	
-		statement = conn.createStatement(); 
-		//statement.executeUpdate("INSERT INTO patient (idpatient, fname, lname, dob, email, password, sex, medHistory, mstatus, education, race)" + "VALUES ('" + 1 + "', '" + "Joshua" + "', '" + "Liddell" + "', '" + "27021985" + "', '" + "email" + "', '" + "password" + "', '" + "male" + "', '" + "medical report" + "', '" + "mstatus" + "', '" + "elvl" + "', '" + "prace" + "')");
-		rs.next();	
-		statement = conn.createStatement();
-		//statement.executeUpdate("INSERT INTO patient (idpatient, fname, lname, dob, email, password, sex, medHistory, mstatus, education, race)" + "VALUES ('" + 2 + "', '" + "J" + "', '" + "L" + "', '" + "2" + "', '" + "email" + "', '" + "password" + "', '" + "male" + "', '" + "medical report" + "', '" + "mstatus" + "', '" + "elvl" + "', '" + "prace" + "')");
-	
+ 		
 		} 
 	catch (Exception e) 
 	{ 
@@ -859,14 +849,14 @@ submit.addActionListener(new ActionListener()
 		String lName1 = lName.getText();
 		String patID = inputID.getText();
 		String patDOB = inputDOB.getText();
-		Boolean found = true;
+		boolean found = true;
 		
 		
 		try 
 		{ 
 			statement = conn.createStatement(); 
 			rs = statement.executeQuery("SELECT * FROM patient");
-			rs.next();
+			//rs.next();
 		
 			while(rs.next())
 			{
@@ -980,10 +970,10 @@ upload.addActionListener(new ActionListener()
 			}
 			try 
 			{ 
-				
+				/*
 				statement = conn.createStatement(); 
 				rs = statement.executeQuery("SELECT * FROM patient"); 
-				rs.next();
+				rs.next();*/
 			
 				//Current patient
 				String patID = inputID.getText();
@@ -1067,15 +1057,15 @@ public static void error2()
 		//pane.setLayout(new GridLayout(4,2,20,50)); 
 		try {
 			statement = conn.createStatement();
-			ResultSet rs = statement.executeQuery("SELECT doctor FROM Appointment");
+			ResultSet rs = statement.executeQuery("SELECT * FROM Appointments");
 			
-			doctorsVector = new Vector<String>();
+			doctorsVector = new Vector();
 			
 			while(rs.next())
 			{
-				if(!doctorsVector.contains(rs.getString(1)))
+				if(!doctorsVector.contains(rs.getString("docName")))
 				{
-					doctorsVector.add(rs.getString(1));
+					doctorsVector.add(rs.getString("docName"));
 				}
 				System.out.println(doctorsVector.lastElement());
 				
@@ -1120,16 +1110,16 @@ public static void error2()
 	       			pane.setLayout(null);							//Apply null layout
 	       				   
 	       			System.out.println("what");
+	       			patientVector = new Vector();
 	       			
 	       			try {
 	       				statement = conn.createStatement();
-	       				ResultSet rs = statement.executeQuery("SELECT appointmentID FROM Appointment WHERE `doctor`='" + docSelected + "';");
-	       				
-	       				patientVector = new Vector<String>();
+	       				ResultSet rs = statement.executeQuery("SELECT * FROM Appointments WHERE `docName`='" + docSelected + "';");
 	       				
 	       				while(rs.next())
 	       				{
-	       					patientVector.add(rs.getString(1));
+	       					if(rs.getString("status").equals("pending"))
+	       						patientVector.add(Integer.toString(rs.getInt(1)));
 	       					System.out.println(patientVector.lastElement());
 	       					
 	       				}
@@ -1166,24 +1156,29 @@ public static void error2()
 				          public void actionPerformed(ActionEvent event) 
 				           {	
 				        	  	
-				  				pSelected = (String) patientBox.getSelectedValue();; 
+				  				pSelected = (String) patientBox.getSelectedValue();
 				  				
 				        	  	pFrame = new JFrame (pSelected); 			//Create and name frame
 				        	   	pFrame.setSize(330, 375); 					//Set size to 400x400 pixels
 				       			pane = pFrame.getContentPane();
 				       			pane.setLayout(null);							//Apply null layout
 				       			pane.setLayout(new GridLayout(5,2,20,50));
+				       			String time1="";
+				       			String day1="";
+				       			String month1="";
+				       			String year1="";
 				       			
 				       			try {
 				       				statement = conn.createStatement();
-				       				ResultSet rs = statement.executeQuery("SELECT time FROM Appointment WHERE `appointmentId`='" + pSelected + "';");
+				       				ResultSet rs = statement.executeQuery("SELECT time FROM Appointments WHERE `appointmentsId`='" + pSelected + "';");
 				       				
-				       				time = new Vector<String>();
+				       				time = new Vector();
 				       				
 				       				while(rs.next())
 				       				{
 				       					time.add(rs.getString(1));
 				       					System.out.println(time.lastElement());
+				       					time1 = rs.getString(1);
 				       					
 				       				}
 				       			} catch (SQLException e) {
@@ -1192,64 +1187,61 @@ public static void error2()
 				       			}
 				       			try {
 				       				statement = conn.createStatement();
-				       				ResultSet rs = statement.executeQuery("SELECT month FROM Appointment WHERE `appointmentId`='" + pSelected + "';");
+				       				ResultSet rs = statement.executeQuery("SELECT month FROM Appointments WHERE `appointmentsId`='" + pSelected + "';");
 				       				
-				       				month = new Vector<String>();
+				       				month = new Vector();
 				       				
 				       				while(rs.next())
 				       				{
 				       					month.add(rs.getString(1));
 				       					System.out.println(month.lastElement());
-				       					
+				       					month1 = rs.getString(1);
 				       				}
 				       			} catch (SQLException e) {
 				       				// TODO Auto-generated catch block
 				       				e.printStackTrace();
 				       			}try {
 				       				statement = conn.createStatement();
-				       				ResultSet rs = statement.executeQuery("SELECT date FROM Appointment WHERE `appointmentId`='" + pSelected + "';");
+				       				ResultSet rs = statement.executeQuery("SELECT day FROM Appointments WHERE `appointmentsId`='" + pSelected + "';");
 				       				
-				       				day = new Vector<String>();
+				       				day = new Vector();
 				       				
 				       				while(rs.next())
 				       				{
 				       					day.add(rs.getString(1));
 				       					System.out.println(day.lastElement());
-				       					
+				       					day1 = rs.getString(1);
 				       				}
 				       			} catch (SQLException e) {
 				       				// TODO Auto-generated catch block
 				       				e.printStackTrace();
 				       			}try {
 				       				statement = conn.createStatement();
-				       				ResultSet rs = statement.executeQuery("SELECT year FROM Appointment WHERE `appointmentId`='" + pSelected + "';");
+				       				ResultSet rs = statement.executeQuery("SELECT year FROM Appointments WHERE `appointmentsId`='" + pSelected + "';");
 				       				
-				       				year = new Vector<String>();
+				       				year = new Vector();
 				       				
 				       				while(rs.next())
 				       				{
 				       					year.add(rs.getString(1));
-				       					System.out.println(year.lastElement());
-				       					
+				       					System.out.println(year.lastElement());   	
+				       					year1 = rs.getString(1);
 				       				}
+				       				
 				       			} catch (SQLException e) {
 				       				// TODO Auto-generated catch block
 				       				e.printStackTrace();
 				       			}
 				       			
-				        	  	JLabel pTime = new JLabel(time.toString());
-				        	  	JLabel pMonth = new JLabel(month.toString());
-				       	  		JLabel pDay = new JLabel(day.toString());
-				       			JLabel pYear= new JLabel(year.toString());
+				        	  	JLabel pTime = new JLabel(time1);
+				        	  	JLabel pMonth = new JLabel(month1);
+				       	  		JLabel pDay = new JLabel(day1);
+				       			JLabel pYear= new JLabel(year1);
 				        	  			
-				       			JLabel appTime = new JLabel("Appointment Time");
-				       			JLabel t = new JLabel("10:00 AM");
-				       			JLabel appMonth = new JLabel("   Month:");
-				       			JLabel m = new JLabel("November");
-				       			JLabel appDay = new JLabel("   Day:");
-				       			JLabel  d = new JLabel("18");
-				       			JLabel appYear = new JLabel("   Year:");
-				       			JLabel y = new JLabel("2015");
+				       			JLabel appTime = new JLabel("   Appointment Time: ");
+				       			JLabel appMonth = new JLabel("   Month: ");
+				       			JLabel appDay = new JLabel("   Day: ");
+				       			JLabel appYear = new JLabel("   Year: ");
 				       			JButton confirm = new JButton("Confirm");
 				       			JButton cancel = new JButton("Deny");
 	       		
@@ -1274,25 +1266,46 @@ public static void error2()
 				       			confirm.addActionListener(new ActionListener() {
 				       				public void actionPerformed(ActionEvent event) 
 				       				{
-				       					docFrame.setVisible(true);	
-				       					pFrame.setVisible(false);
+				       					try
+			       			        	{
+				       						Statement stmt = conn.createStatement();
+				       					    String sql = "UPDATE `cse`.`appointments` SET `status`='approved' WHERE `appointmentsID`='" + pSelected + "';";
+				       					    stmt.executeUpdate(sql);
+				       					    patientVector.remove(pSelected);
+				       					    patientBox.updateUI();
+				       					    
+					       			        docFrame.setVisible(true);
+					       			        pFrame.setVisible(false);
+				       					    
+				       					}
+				       					catch(Exception e){
+				       						e.printStackTrace();
+				       					}
 				       				}
 				       			});
 				       			cancel.addActionListener(new ActionListener() {
 				       				public void actionPerformed(ActionEvent event)
 				       				{
-				       					try{
-				       						Statement stmt = conn.createStatement();
-				       					    String sql = "DELETE FROM appointment " +"WHERE appointmentId="+pSelected;
-				       					    stmt.executeUpdate(sql);
+				       					int reply = JOptionPane.showConfirmDialog(pFrame, "Are you sure?", "Confirm cancellation", JOptionPane.YES_NO_OPTION);
+				       			        if (reply == JOptionPane.YES_OPTION) {
+				       			        	try
+				       			        	{
+					       						Statement stmt = conn.createStatement();
+					       					    String sql = "UPDATE `cse`.`appointments` SET `status`='denied' WHERE `appointmentsID`='" + pSelected + "';";
+					       					    stmt.executeUpdate(sql);
+					       					    patientVector.remove(pSelected);
+					       					    patientBox.updateUI();
+					       					    
+					       					    fmain.setVisible(true);	
+						       			        docFrame.setVisible(false);
+						       			        pFrame.setVisible(false);
+					       					    
+					       					}
+					       					catch(Exception e){
+					       						e.printStackTrace();
+					       					}
+				       					
 				       					}
-				       					catch(Exception e){
-				       						e.printStackTrace();
-				       					}
-				       				
-				       						fmain.setVisible(true);	
-				       						docFrame.setVisible(false);
-				       						pFrame.setVisible(false);
 				       					
 				       				}	
 				       			});
@@ -1305,4 +1318,3 @@ public static void error2()
 
 	}
 }
-
