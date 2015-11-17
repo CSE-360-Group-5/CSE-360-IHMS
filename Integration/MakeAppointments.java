@@ -57,15 +57,22 @@ public class MakeAppointments extends JFrame
 	    {
 	      System.err.println("D'oh! Got an exception!"); 
 	      System.err.println(e.getMessage()); 
-	    } 
+	    }
 		
 		try{
+			
 			statement = conn.createStatement();
 			rs = statement.executeQuery("SELECT * FROM appointments WHERE `patientID` = " + patientID);
-			while(rs.next()){
-				person.add(new Appointment(rs.getString("Doctor"),rs.getString("Month"),rs.getString("Year"),rs.getString("Date"),rs.getString("Time"),rs.getInt("Row"),rs.getInt("Column"),rs.getInt("Patient"),rs.getInt("AppointmentID")));				
-				//person.add(a1);
+			while(rs.next())
+			{
+				if(rs.getString("status").equals("pending") || rs.getString("status").equals("approved"))
+				{
+					Appointment a1 = new Appointment(rs.getString("docName"),rs.getString("month"),rs.getString("year"),rs.getString("day"),rs.getString("time"),rs.getInt("row"),rs.getInt("col"),rs.getInt("patientID"),rs.getInt("appointmentsID"));
+					a1.setStatus(rs.getString("status"));
+					person.add(a1);
+				}
 			}
+			
 		}
 		catch (SQLException e) {
 			System.err.println("Got an exception!");
@@ -241,6 +248,16 @@ public class MakeAppointments extends JFrame
 				}
 			}
 			
+			for (int i = 0; i < person.size(); i++) {
+				Appointment a1 = (Appointment) person.get(i);
+				// add code here cycling through the array list and testing each
+				// possibility of columns and rows stored in the arraylist of
+				// appointments
+				if (Integer.parseInt(a1.getRow()) == row && Integer.parseInt(a1.getColumn()) == column && a1.getStatus().equals("approved")) {
+					setBackground(Color.green);
+				}
+			}
+			
 			setBorder(null);
 			setForeground(Color.black);
 			return this;  
@@ -406,6 +423,7 @@ public class MakeAppointments extends JFrame
 		        	stat.executeUpdate("INSERT INTO appointments (appointmentsID, patientID, docType, docName, day, month, year, time, row, col, finalized)" + " VALUES ( " + id + ", " + patient_id + ", '" + docT + "', '" + name + "', " + d[1] + ", " + d[0] +", " + d[2] + ", '" + time + "', " + currentRow + ", " + currentCol + ", 'false')");
 		        												 
 		        	Appointment list = new Appointment(name, d[0], d[2], d[1], time, currentRow, currentCol, pati,id);
+		        	
 		        	person.add(list);
 		        	   
 					for(int i =0; i< person.size(); i++)
@@ -492,8 +510,8 @@ public class MakeAppointments extends JFrame
 					{
 						//statement = conn.createStatement();
 						if(dellID != 0){
-							PreparedStatement st = conn.prepareStatement("DELETE FROM `cse`.`appointments` WHERE `appointmentsID`='" + dellID + "';");
-							st.executeUpdate(); 
+							statement = conn.createStatement();
+							statement.executeUpdate("UPDATE `cse`.`appointments` SET `status`='canceled' WHERE `appointmentsID`='" + dellID + "';"); 
 						}
 					}
 					catch (SQLException e)
@@ -501,8 +519,7 @@ public class MakeAppointments extends JFrame
 						System.err.println("Got an exception!");
 						System.err.println(e.getMessage());
 					}
-		        	
-		        	//DELETE FROM `cse`.`appointments` WHERE `appointmentsID`='6';
+		  
 					inputEdit.setVisible(false);
 		        }
 		        else {}				
@@ -523,4 +540,3 @@ public class MakeAppointments extends JFrame
 	}
 
 }
-
