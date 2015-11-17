@@ -20,11 +20,13 @@ public class Registration extends JFrame{
 	// Labels
 	/////////////////////////////////////////////////////////////////
 
+	private JLabel ssnLabel;
 	private JLabel firstNameLabel;
 	private JLabel lastNameLabel;
 	private JLabel emailLabel;
 	private JLabel passwordLabel;
 	private JLabel dobLabel;
+	private JLabel hcipLabel;
 	private JLabel sexLabel;
 	private JLabel marraigeLabel;
 	private JLabel educationLabel;
@@ -38,15 +40,19 @@ public class Registration extends JFrame{
 	private JLabel requiredLabel2;
 	private JLabel requiredLabel3;
 	private JLabel requiredLabel4;
+	private JLabel requiredLabel5;
+	private JLabel requiredLabel6;
 	
 	/////////////////////////////////////////////////////////////////
 	// Text fields
 	/////////////////////////////////////////////////////////////////
 	
+	private JTextField ssnField; // SSN text field
 	private JTextField firstNameField; // first name text field
 	private JTextField lastNameField; // last name text field
 	private JTextField emailField; // email address field
 	private JTextField passwordField; // password field
+	private JTextField hcipField; // healthcare insurance provider field
 	private JTextField registrationCodeField; // registration code field
 	private JTextField medicalHistoryField; // medical history field
 	private JTextField sexField; // gender field
@@ -101,11 +107,13 @@ public class Registration extends JFrame{
 	// JPanels
 	/////////////////////////////////////////////////////////////////
 	
+	private JPanel ssnPanel; // SSN panel
 	private JPanel registrationCodePanel; // Registration Code panel
 	private JPanel firstNamePanel; // First name panel
 	private JPanel lastNamePanel; // Last name panel
 	private JPanel emailPanel; // Email panel
 	private JPanel passwordPanel; // Password panel
+	private JPanel hipPanel; // Healthcare insurance provider panel
 	private JPanel dobPanel; // User DOB panel
 	private JPanel sexPanel; // gender panel
 	private JPanel maritalPanel; // Marital status panel
@@ -148,10 +156,12 @@ public class Registration extends JFrame{
 		// Instantiate the components
 		
 		//JLabels
+		ssnLabel = new JLabel("SSN:"); // ssn label
 		firstNameLabel = new JLabel("First name:"); // first name label
 		lastNameLabel = new JLabel("Last name:"); // last name label
 		emailLabel = new JLabel("Email address:"); // email address label
 		passwordLabel = new JLabel("Password:"); // password label
+		hcipLabel = new JLabel("Healthcare Insurance Provider: "); // healthcare insurance provider label
 		dobLabel = new JLabel("Date of Birth: "); // DOB label
 		sexLabel = new JLabel("Sex: "); // sex Label
 		marraigeLabel = new JLabel("Marital Status: "); // marital Status Label
@@ -166,17 +176,23 @@ public class Registration extends JFrame{
 		requiredLabel2 = new JLabel("* "); // required sign for last name label
 		requiredLabel3 = new JLabel("* "); // required sign for email label
 		requiredLabel4 = new JLabel("* "); // required sign for password label
+		requiredLabel5 = new JLabel("* "); // required sign for SSN label
+		requiredLabel6 = new JLabel("* "); // required sign for Healthcare insurance provider label
 		requiredLabel.setForeground(Color.red);
 		requiredLabel1.setForeground(Color.red);
 		requiredLabel2.setForeground(Color.red);
 		requiredLabel3.setForeground(Color.red);
 		requiredLabel4.setForeground(Color.red);
+		requiredLabel5.setForeground(Color.red);
+		requiredLabel6.setForeground(Color.red);
 		
 		//JTextFields
+		ssnField = new JTextField(15); // SSN field
 		firstNameField = new JTextField(15); // first name text field
 		lastNameField = new JTextField(15); // last name text field
 		emailField = new JTextField(15); // email address field
 		passwordField = new JPasswordField(15); // password field
+		hcipField = new JTextField(15); // Healthcare insurance provider field
 		registrationCodeField = new JTextField(15); // registration code field
 		medicalHistoryField = new JTextField(15); // medical history field
 		sexField = new JTextField(); // gender field
@@ -272,6 +288,11 @@ public class Registration extends JFrame{
 	    submitButton.addActionListener(new ButtonListener()); //add listener
 	    
 	    //JPanels
+	    ssnPanel = new JPanel(); // SSN panel
+	    ssnPanel.add(ssnLabel);
+	    ssnPanel.add(requiredLabel5);
+	    ssnPanel.add(ssnField);
+	    
 	    firstNamePanel = new JPanel(); // First name panel
 		firstNamePanel.add(firstNameLabel);
 		firstNamePanel.add(requiredLabel1);
@@ -291,6 +312,12 @@ public class Registration extends JFrame{
 		passwordPanel.add(passwordLabel);
 		passwordPanel.add(requiredLabel4);
 	    passwordPanel.add(passwordField);
+	    
+	    hipPanel = new JPanel(); // Healthcare insurance provider panel
+	    hipPanel.add(hcipLabel);
+	    hipPanel.add(requiredLabel6);
+	    hipPanel.add(hcipField);
+	    hipPanel.setVisible(false);
 		
 		dobPanel = new JPanel(); // User DOB panel
 		dobPanel.add(dobLabel);
@@ -336,12 +363,14 @@ public class Registration extends JFrame{
 		submitPanel = new JPanel(); // Submit button panel
 		submitPanel.add(submitButton);
 		
-		setLayout(new GridLayout(13,1)); // sets the layout and add components
+		setLayout(new GridLayout(15,1)); // sets the layout and add components
+		add(ssnPanel);
 		add(firstNamePanel);
 	    add(lastNamePanel);
 	    add(emailPanel);
 	    add(passwordPanel);
 	    add(dobPanel);
+	    add(hipPanel);
 	    add(sexPanel);
 	    add(maritalPanel);
 	    add(educationPanel);
@@ -351,7 +380,7 @@ public class Registration extends JFrame{
 	    add(submitPanel);
 	    
 	    setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-	    setSize (750, 400);
+	    setSize (750, 500);
 	}
 	
 	//Listener to sex radio buttons 
@@ -434,12 +463,14 @@ public class Registration extends JFrame{
 		{ 
 			if (typeDropdown.getSelectedIndex() == 0)
 			{
+				hipPanel.setVisible(false);
 				registrationCodePanel.removeAll();
 				registrationCodePanel.revalidate();
 				registrationCodePanel.repaint();
 			}
 			if (typeDropdown.getSelectedIndex() == 1)
 			{
+				hipPanel.setVisible(true);
 				registrationCodePanel.removeAll();
 				medicalHistoryField.setText("Previous illnesses and current medication...");
 				registrationCodePanel.setSize(15,15);
@@ -450,6 +481,7 @@ public class Registration extends JFrame{
 			}
 			if (typeDropdown.getSelectedIndex() >= 2)
 			{
+				hipPanel.setVisible(false);
 				registrationCodePanel.removeAll();
 				registrationCodePanel.add(registrationCodeLabel);
 				registrationCodePanel.add(requiredLabel);
@@ -470,6 +502,7 @@ public class Registration extends JFrame{
 			if(action == submitButton)
 			{
 				String type = (String) typeDropdown.getSelectedItem();
+				String ssn = ssnField.getText(); // ssn of the person
 				String firstName = firstNameField.getText(); // first name of person
 				String lastName = lastNameField.getText(); // last name of person
 				String emailAddress = emailField.getText(); // email address of person
@@ -477,6 +510,7 @@ public class Registration extends JFrame{
 				int month = Integer.parseInt((String)monthDropdown.getSelectedItem()); // month of DOB
 				int day = Integer.parseInt((String)dayDropdown.getSelectedItem()); // day of DOB
 				int year = Integer.parseInt((String)yearDropdown.getSelectedItem()); // year of DOB
+				String hcip = hcipField.getText(); // healthcare insurance provider;
 				String sex = sexField.getText(); //person's sex
 				String mStatus = marriageField.getText(); //person's marital status
 				String eLVL = educationField.getText(); // person's education lvl
@@ -502,7 +536,10 @@ public class Registration extends JFrame{
 				else if (typeDropdown.getSelectedIndex() >= 2 && registrationCode.equals(""))
 					JOptionPane.showMessageDialog(sexPanel, "Please fill all the required fields");
 	
-				else if (firstName.equals("") || lastName.equals("") || emailAddress.equals("") || password.equals(""))
+				else if (ssn.equals("") || firstName.equals("") || lastName.equals("") || emailAddress.equals("") || password.equals(""))
+					JOptionPane.showMessageDialog(sexPanel, "Please fill all the required fields");
+				
+				else if(typeDropdown.getSelectedIndex() == 1 && hcip.equals(""))
 					JOptionPane.showMessageDialog(sexPanel, "Please fill all the required fields");
 				
 				////////////////////////////////////////////////////////////////
@@ -523,15 +560,17 @@ public class Registration extends JFrame{
 						
 			            id++;
 						statement = conn.createStatement();
-						statement.executeUpdate("INSERT INTO patient (idpatient, fname, lname, dob, email, password, sex, medHistory, mstatus, education, race, isNew)" + "VALUES (" + id + ", '" + firstName + "', '" + lastName + "', '" + dob + "', '" + emailAddress + "', '" + password + "', '" + sex + "', '" + medicalHistory + "', '" + mStatus + "', '" + eLVL + "', '" + pRace + "', 'true')");
+						statement.executeUpdate("INSERT INTO patient (idpatient, ssn, fname, lname, dob, email, password, HCIP, sex, medHistory, mstatus, education, race, isNew)" + "VALUES (" + id + ", '" + ssn + "', '" + firstName + "', '" + lastName + "', '" + dob + "', '" + emailAddress + "', '" + password + "', '" + hcip + "', '" + sex + "', '" + medicalHistory + "', '" + mStatus + "', '" + eLVL + "', '" + pRace + "', 'true')");
 						
 						Patient patient = new Patient();
+						patient.setSSN(ssn);
 						patient.setFirstName(firstName);
 						patient.setLastName(lastName);
 						patient.setDOB(dob);
 						patient.setSex(sex);
 						patient.setEmail(emailAddress);
 						patient.setPassword(password);
+						patient.setHCIP(hcip);
 						patient.setPatientId(id);
 						patient.setSocialData(mStatus, eLVL, pRace);
 						patient.setIsNew("true");
