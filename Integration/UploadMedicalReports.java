@@ -29,21 +29,22 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-public class UploadMedicalReports extends JFrame
+public class UploadMedicalReport extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 	static Container pane;
 	static JButton fappoin, upload, update, epresc;
 	static JPanel staff;
 	static JFrame main;
-	static ArrayList<Prescription> presc=new ArrayList<Prescription>();
-	static ArrayList<String> pat = new ArrayList();
-	static Vector<String> doctorsVector, patientVector, time, month, day, year;
+	static ArrayList presc=new ArrayList();
+	static ArrayList pat = new ArrayList();
+	static Vector doctorsVector, patientVector, time, month, day, year;
 	
 	static JLabel entInfo, report2, error, fLabel, lLabel, idLabel;
 	static JButton search, revise, delete, submit, cancel, newSearch, ok;
 	static JFrame fUpdate1,fUpdate2,fRevise,fError;
 	static Container pane1,pane2,pane3,pane4;
+	static JPanel mainPanel, buttonPanel;
 	static JTextField fName, lName, patID;
 	static JPanel pan1,pan2,pan3,pan4;
 	static JTextArea report;
@@ -77,7 +78,7 @@ public class UploadMedicalReports extends JFrame
 	static ResultSet rs; // Gets the result from SELECT commands 
 	
 	
-	public UploadMedicalReports()
+	public UploadMedicalReport(final int id)
 	{
 	// Create connection to database
 			try 
@@ -89,7 +90,6 @@ public class UploadMedicalReports extends JFrame
 				// Establish the connection to the database 
 				String url = "jdbc:mysql://localhost:3306/cse"; 
 				conn = DriverManager.getConnection(url,"root","admin"); 
-				System.out.println("conected");
 			} 
 
 
@@ -100,161 +100,49 @@ public class UploadMedicalReports extends JFrame
 			} 
 
 
-			fUpload1 = new JFrame("Upload Medical Report");
-			fUpload1.setSize(330, 375);
-			pane1 = fUpload1.getContentPane();
-			pane1.setLayout(null);
-			//fUpload1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-			pan1 = new JPanel(null);
-			patID2 = new JLabel("Patient ID");
-			patDOB = new JLabel("DOB(ddmmyyyy)");
-			viewRecord = new JLabel("View patient");
-			submit = new JButton("Submit");
-			inputID = new JTextField();
-			inputName = new JTextField();
-			inputDOB = new JTextField();
-
-			fName = new JTextField();
-			lName = new JTextField();
-			fLabel = new JLabel("First Name");
-			lLabel = new JLabel("Last Name");
-
 			fc = new JFileChooser();
 
-			pane1.add(pan1);
-			pan1.add(fLabel);
-			pan1.add(lLabel);
-			pan1.add(fName);
-			pan1.add(lName);
-			pan1.add(patDOB);
-			pan1.add(patID2);
-			pan1.add(inputID);
-			pan1.add(inputDOB);
-			pan1.add(submit);
-
-
-			fLabel.setBounds(10, 10, 200, 40);
-			fName.setBounds(10, 45, 100, 30);
-			lLabel.setBounds(170, 10, 200, 40);
-			lName.setBounds(170, 45, 100, 30);
-			patDOB.setBounds(10, 105, 250, 40);
-			inputDOB.setBounds(10, 135, 100, 30);
-			patID2.setBounds(170, 105, 200, 40);
-			inputID.setBounds(170, 135, 100, 30);
-			submit.setBounds(10, 230, 80, 30);
-
 			//Upload reports
-			fUpload2 = new JFrame("Upload Medical Report");
-			fUpload2.setSize(330, 375);
-			pane2 = fUpload2.getContentPane();
-			pane2.setLayout(null);
-			fUpload2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			setTitle("Upload Medical Report");
+			setSize(330, 375);
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
-			pan2 = new JPanel(null);
-			browse = new JLabel("Select Report to Upload");
-			reports = new JComboBox(upReports);
 			upload = new JButton("Browse");
-			search = new JButton("Search");
+			cancel = new JButton("Cancel");
+
+			browse = new JLabel("Select Report file to Upload");
+			
+			buttonPanel = new JPanel();
+			buttonPanel.add(upload);
+			buttonPanel.add(cancel);
+			
+			//reports = new JComboBox(upReports);
+			
 			complete = new JLabel("");
 			curPat = new JLabel("");
 
-
-			pane2.add(pan2);
-			pan2.add(browse);
-			pan2.add(reports);
-			pan2.add(complete);
-			pan2.add(upload);
-			pan2.add(search);
-			pan2.add(curPat);
-
 			browse.setBounds(10, 40, 200, 40);
-			reports.setBounds(10, 75, 200, 40);
 			complete.setBounds(10,150,200,40 );
 			upload.setBounds(10, 230, 80, 30);
-			search.setBounds(200, 230, 80, 30);
+			cancel.setBounds(200, 230, 80, 30);
 			curPat.setBounds(10,10,200,30);
+			
+			mainPanel = new JPanel();
+			mainPanel.add(browse);
+			mainPanel.add(buttonPanel);
+			mainPanel.add(curPat);
+			mainPanel.add(complete);
+			
+			add(mainPanel);
 
-
-			submit.addActionListener(new ActionListener() 
+			
+			cancel.addActionListener(new ActionListener() 
 			{
 				public void actionPerformed(ActionEvent event)
 				{
-					String fName1 = fName.getText();
-					String lName1 = lName.getText();
-					String patID = inputID.getText();
-					String patDOB = inputDOB.getText();
-					boolean found = true;
-
-
-					try 
-					{ 
-						statement = conn.createStatement(); 
-						rs = statement.executeQuery("SELECT * FROM patient");
-
-						while(rs.next())
-						{
-							if(rs.getString("fname").equalsIgnoreCase(fName1) && rs.getString("lname").equalsIgnoreCase(lName1) && Integer.toString(rs.getInt("idpatient")).equals(patID)&&rs.getString("dob").equals(patDOB))
-							{
-								fUpload2.setVisible(true);
-								fUpload1.setVisible(false);
-								found = true;
-
-
-							}
-							else
-							{
-								found = false;
-							}
-						}
-
-						if(found == false)
-						{
-							while(rs.previous())
-							{
-								if(rs.getString("fname").equalsIgnoreCase(fName1) && rs.getString("lname").equalsIgnoreCase(lName1) && Integer.toString(rs.getInt("idpatient")).equals(patID)&&rs.getString("dob").equals(patDOB))
-								{
-									fUpload2.setVisible(true);
-									fUpload1.setVisible(false);
-									found = true;
-
-								}
-								else
-								{
-									found = false;
-									//error();
-								}
-							}
-
-							if (found == false)
-							{
-								error2();
-							}
-						}
-						rs.close();
-					}
-					catch (Exception e) 
-					{ 
-						System.err.println("Got an exception! ");  
-						System.err.println(e.getMessage());  
-					} 
-					curPat.setText("Patient: " + fName1 + " " + lName1);
+					dispose();
 				}
 			});
-
-
-			search.addActionListener(new ActionListener() 
-			{
-				public void actionPerformed(ActionEvent event)
-				{
-					complete.setText("");
-					fUpload1.setVisible(true);
-					fUpload2.setVisible(false);
-
-				}
-			});
-
 
 			//Browse button
 			upload.addActionListener(new ActionListener() 
@@ -307,10 +195,9 @@ public class UploadMedicalReports extends JFrame
 						try 
 						{ 
 							//Current patient
-							String patID = inputID.getText();
 
 							statement = conn.createStatement(); 
-							statement.executeUpdate("UPDATE patient SET " + "`medHistory`='" + addReport + "' WHERE `idpatient`='" + (Integer.parseInt(patID)) + "';");
+							statement.executeUpdate("UPDATE patient SET " + "`HCR`='" + addReport + "' WHERE `idpatient`='" + id + "';");
 							
 							complete.setText("Upload Complete");
 						}
@@ -325,48 +212,5 @@ public class UploadMedicalReports extends JFrame
 				}
 			});
 
-
-			pan1.setBounds(0, 0, 320, 335);
-			pan2.setBounds(0, 0, 320, 335);
-			fUpload1.setResizable(false);
-			fUpload1.setVisible(true);
-		}
-
-
-		public static void error2()
-		{
-			fError = new JFrame("Error");
-			fError.setSize(250, 250);
-			pane3 = fError.getContentPane();
-			pane3.setLayout(null);
-			fError.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-			pan3 = new JPanel(null);
-			error = new JLabel("Patient does not exist");
-			ok = new JButton("OK");
-
-
-			pane3.add(pan3);
-			pan3.add(error);
-			pan3.add(ok);
-
-			error.setBounds(10, 10, 220, 40);
-			ok.setBounds(10, 100, 80, 40);
-
-
-
-			ok.addActionListener(new ActionListener() 
-			{
-				public void actionPerformed(ActionEvent event)
-				{
-					fUpload1.setVisible(true);
-					fError.setVisible(false);
-
-				}
-			});
-
-			pan3.setBounds(0,0,150,150);
-			fError.setResizable(false);
-			fError.setVisible(true);
 		}
 }
